@@ -1,10 +1,10 @@
 {
   "name": "generator-tight",
   "version": "0.0.0",
-  "description": "Yeoman generator",
+  "description": "Bolt boilerplate generator",
   "license": "MIT",
   "main": "app/index.js",
-  "repository": "pinpickle/generator-tight",
+  "repository": "pinpickle/tight",
   "author": {
     "name": "Christian Silver",
     "email": "",
