@@ -1,0 +1,33 @@
+{
+    "name": "<%= owner %>/<%= projectName %>",
+    "description": "<%= description %>",
+    "license": "<%= license %>",
+
+    "require": {
+        "bolt/bolt": "~2.1",
+        "composer/composer": "1.0.*@dev",
+        "ircmaxell/random-lib": "dev-master",
+        "symfony/class-loader": "~2.7@beta"
+    },
+    "authors": [
+        {
+            "name": "<%= username %>",
+            "email": "<%= email %>"
+        }
+    ],
+    "minimum-stability": "beta",
+    "prefer-stable": true,
+
+    "scripts": {
+        "bolt-update": [
+            "Bolt\\Composer\\ScriptHandler::bootstrap"
+        ]
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.1-dev"
+        },
+        "bolt-web-dir": "./",
+        "bolt-app-dir": "./app"
+    }
+}
