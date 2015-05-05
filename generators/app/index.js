@@ -156,6 +156,15 @@ module.exports = yeoman.generators.Base.extend({
           done();
         }.bind(this));
       }
+    },
+
+    subGenerators: function () {
+      this.config.set(this.props);
+      this.config.save();
+
+      this.composeWith('tight:extension', {hi: 'bye'}, {
+        local: require.resolve('../extension')
+      });
     }
   },
 
