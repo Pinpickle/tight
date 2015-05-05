@@ -1,0 +1,46 @@
+{% extends 'partials/_config.twig' %}
+{%- block everything %}
+<!doctype html>
+<html class="no-js" lang="">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>{% block pagetitle %}{{ realtitle|preg_replace('/\\s+/', ' ')|trim|raw }}{% endblock pagetitle %}</title>
+    <meta name="description" content="{% block pagedescription %}{{ description|preg_replace('/\\s+/', ' ')|trim|raw }}{% endblock %}">
+    <meta name="title" content="{{ block('title') }}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- for Facebook -->
+    <meta property="og:title" content="{{ block('pagetitle') }}" />
+    <meta property="og:image" content="{{ asset('images/fb-share.png', paths.hosturl ~ paths.theme) }}" />
+    <meta property="og:description" content="{{ block('pagedescription') }}" />
+
+    <link rel="icon" href="{{ paths.root }}favicon.ico" />
+    <link rel="shortcut icon" href="{{ paths.root }}favicon.ico" />
+    <link rel="apple-touch-icon" href="{{ asset('images/apple-touch-icon.png') }}">
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+    <link rel="stylesheet" href="{{ asset('styles/main.css') }}" />
+  </head>
+  <body class="{% block bodyclass %}{% endblock %}">
+    <!--[if lt IE 8]>
+        <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+    {% block page %}
+    {% endblock %}
+
+    <script data-kc-config="{{ config|json_encode|escape('html_attr') }}" src="{{ asset('scripts/main.js') }}"></script>
+
+    <!-- Google Analytics -->
+    <script>
+      (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+      function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+      e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+      e.src='https://www.google-analytics.com/analytics.js';
+      r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+      ga('create','theme.gaid','auto');ga('send','pageview');
+    </script>
+  </body>
+</html>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends 'base.twig' %}
+
+{% block bodyclass %}{{ parent() }} layout-default{% endblock %}
+
+{% block page %}
+  {% block header %}
+    <header class="site-header">
+      <div class="wrapper-content">
+        {{ menu() }}
+      </div>
+    </header>
+  {% endblock %}
+
+  {% block main %}
+  <main class="site-main">
+    <div class="wrapper-content">
+      <h1 class="page-heading">{{ block('title') }}</h1>
+      {% block content %}
+        {{ record.body }}
+      {% endblock %}
+    </div>
+  </main>
+  {% endblock %}
+
+  {% block footer %}
+    <footer class="site-footer">
+      <div class="wrapper-content">
+        <p><small>Copyright &copy; {{ app.config.get('general/sitename') }} {{ 'now'|localdate('%Y') }} &bull; <a href="{{ paths.root }}terms">Terms&nbsp;&amp;&nbsp;Conditions</a> &bull; <a href="{{ paths.root }}contact">Contact</a></small></p>
+      </div>
+    </footer>
+  {% endblock %}
+{% endblock %}

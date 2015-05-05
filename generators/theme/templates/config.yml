@@ -1,0 +1,7 @@
+# Theme config
+
+# Google analytics tracking ID
+gaid: UA-XXXXX-X
+
+template_directory: templates
+record_template: default.twig

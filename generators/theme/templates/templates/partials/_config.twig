@@ -1,0 +1,33 @@
+{% spaceless %}
+{% set prices = app.config.get('general/school_prices') %}
+{% set config = {
+  prices: prices
+} %}
+{% if bodyclasses is not defined %}{% set bodyclasses = [] %}{% endif %}
+{% if title is not defined %}
+  {% set title = record.title|striptags %}
+{% endif %}
+
+{% set title %}{% block title %}{{ record.title }}{% endblock %}{% endset %}
+
+{% if record.meta_title != "" %}
+  {% set realtitle %}{{ record.meta_title|striptags }}{% endset %}
+{% elseif title %}
+  {% set realtitle %}{{ title }} &bull; {{ app.config.get('general/sitename') }}{% endset %}
+{% else %}
+  {% set realtitle %}{{ app.config.get('general/sitename') }} &bull; {{ app.config.get('general/payoff') }}{% endset %}
+{% endif %}
+
+{% set excerpt = record.excerpt(100) %}
+{% if record.meta_description != "" %}
+  {% set description = record.meta_description|striptags %}
+{% elseif record.teaser != "" %}
+  {% set description = record.teaser|striptags %}
+{% elseif excerpt != "" %}
+  {% set description = excerpt %}
+{% else %}
+  {% set description = app.config.get('general/description') %}
+{% endif %}
+
+{% endspaceless %}
+{% block everything %}{% endblock %}
