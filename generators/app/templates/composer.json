@@ -1,5 +1,5 @@
 {
-    "name": "<%= owner %>/<%= projectName %>",
+    "name": "<%= owner.toLowerCase() %>/<%= hyphenName %>",
     "description": "<%= description %>",
     "license": "<%= license %>",
 

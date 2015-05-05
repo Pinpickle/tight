@@ -4,8 +4,10 @@ var chalk = require('chalk');
 var yosay = require('yosay');
 var slug = require('slug');
 var fs = require('fs');
+var _ = require('lodash');
+var path = require('path');
 
-module.exports = yeoman.generators.NamedBase.extend({
+module.exports = yeoman.generators.Base.extend({
 
   initializing: function () {
     this.pkg = require('../../package.json');
@@ -21,56 +23,48 @@ module.exports = yeoman.generators.NamedBase.extend({
         'Tighten that Bolt! Welcome to the ' + chalk.red('Tight') + ' generator!'
       ));
 
+      this.log(chalk.underline.blue('We\'re going to ask for some names for your project. Only numbers and letters (and sometimes spaces) for these.') + '\n\n' +
+               'The first is the real name for it - please use spaces and title case for it. We will handle slugification and camelCase where appropiate. \n\n' +
+               'The second is a short name, which you\'ll be typing a lot. Use UpperCamelCase for this. No spaces. \n\n' +
+               'The last is your namespace, which is used in a few places. This UpperCamelCase string represents you or your organisation.');
+
       var prompts = [{
         type: 'input',
-        name: 'projectName',
-        message: 'Name (e.g. my-website). No capitals.',
-        default: function (props) {
-          return this.name.toLowerCase();
-        }.bind(this),
+        name: 'name',
+        message: 'Name',
+        default: 'Cool Website',
         validate: function (input) {
           if (input === '') {
-            return 'Name cannot be blank!'
+            return 'Name cannot be blank!';
           }
 
           return true;
         }
       }, {
         type: 'input',
-        name: 'safeName',
-        message: 'Safe name (e.g. MyWebsite). Short, UpperCamelCase, numbers and letters.',
+        name: 'shortName',
+        message: 'Short Name',
         validate: function validate(input) {
-          if (input === '') {
-            return 'Name cannot be blank!'
-          }
-
           if (!(/^([A-Za-z0-9\-\_])+$/.test(input))) {
             return 'No weird characters!';
           }
 
           return true;
         },
-        default: function (props) {
-          return slug(props.projectName, {
-            replacement: '',
-            remove: /\-|\_|\./g
-          });
-        }
+        default: 'Cool'
       }, {
         type: 'input',
         name: 'owner',
-        message: 'Who does this belong to? (For namespaces)',
+        message: 'Namespace',
         validate: function validate(input) {
-          if (input === '') {
-            return 'Name cannot be blank!'
-          }
-
           if (!(/^([A-Za-z0-9\-\_])+$/.test(input))) {
             return 'No weird characters!';
           }
 
           return true;
-        }
+        },
+        default: 'CoolCo',
+        store: true
       }, {
         type: 'input',
         name: 'license',
@@ -95,18 +89,24 @@ module.exports = yeoman.generators.NamedBase.extend({
         name: 'repository',
         message: 'Where does this live online?',
         default: function (props) {
-          return 'https://github.com/' + slug(props.owner) + '/' + props.projectName;
+          return 'https://github.com/' + slug(props.owner) + '/' + slug(props.name, '-');
         }
       }];
 
       this.prompt(prompts, function (props) {
         this.props = props;
-        this.name = props.projectName;
-
+        this.props.hyphenName = slug(props.name, '-').toLowerCase();
+        this.props.camelName = slug(props.name
+          .replace(/^(\s*)(.+)(\s*)$/g, function (g) { return g[2]; }) // Remove trailing spaces
+          .replace(/\s+(.)/g, function (g) { return g[1].toUpperCase(); }), // Camel case
+          '-'); //Slugify
+        this.props.upperCamelName = this.props.camelName.charAt(0).toUpperCase() + this.props.camelName.slice(1);
+        this.name = props.name;
 
         done();
       }.bind(this));
     },
+
     composer: function () {
       this.log(chalk.red('Running Composer now. Make sure you have it installed!'));
 
@@ -115,13 +115,47 @@ module.exports = yeoman.generators.NamedBase.extend({
       // Sorry Yeoman, need to get this on the file system
       fs.writeFileSync(this.destinationPath('composer.json'), this.engine(fs.readFileSync(this.templatePath('composer.json')).toString(), this.props));
 
-      var install = this.spawnCommand('composer', ['install']);
+      /*var install = this.spawnCommand('composer', ['install']);
       install.on('close', function () {
         var bolt = this.spawnCommand('composer', ['bolt-update']);
         bolt.on('close', function () {
           done();
         });
+      }.bind(this));*/
+      done();
+    },
+
+    webroot: function () {
+      var done = this.async();
+
+      // Try to detect webroot
+      var directories = fs.readdirSync(this.destinationPath()).filter(function (file)  {
+        return ((!_.contains(['app', 'extensions', 'vendor'], file)) && (fs.statSync(path.join(this.destinationPath(), file)).isDirectory()));
       }.bind(this));
+
+      if (directories.length === 0) {
+        // Webroot is the same directory
+        this.log(chalk.green('Detected: webroot in same folder.'));
+        this.props.webroot = '';
+        done();
+      } else if (directories.length === 1) {
+        // There was only one extra directory, it must be webroot
+        this.log(chalk.green('Detected: webroot in ' + directories[0] + '.'));
+        this.props.webroot = directories[0];
+        done();
+      } else {
+        // More than one extra directory, ask the user
+        this.log(chalk.red('Could not detect your webroot folder. Sorry, could you please enter it again?'));
+        this.prompt([{
+          type: 'input',
+          name: 'webroot',
+          message: 'What is your webroot folder?',
+          default: directories[0]
+        }], function (props) {
+          this.props.webroot = props.webroot;
+          done();
+        }.bind(this));
+      }
     }
   },
 
@@ -150,6 +184,6 @@ module.exports = yeoman.generators.NamedBase.extend({
   },
 
   install: function () {
-    this.installDependencies();
+    //this.installDependencies();
   }
 });
