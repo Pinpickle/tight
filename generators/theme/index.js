@@ -78,7 +78,7 @@ module.exports = yeoman.generators.Base.extend({
       this.directory('src/less', 'src/less');
       this.directory('src/images', 'src/images');
 
-      this.fastTemplate(['bower.json', 'config.yml', 'gulpfile.js', 'package.json', 'src/htaccess', 'src/js/main.js', 'src/js/modules/example-module.js', 'src/js/contexts/homepage.js',
+      this.fastTemplate(['bower.json', 'config.yml', 'gulpfile.js', 'package.json', 'src/htaccess', 'src/js/main.js', 'src/js/modules/example-module.js', 'src/js/contexts/page-home.js',
                          {gitignore: '.gitignore', bowerrc: '.bowerrc'}]);
     }
   }
