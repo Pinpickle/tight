@@ -162,8 +162,12 @@ module.exports = yeoman.generators.Base.extend({
       this.config.set(this.props);
       this.config.save();
 
-      this.composeWith('tight:extension', {hi: 'bye'}, {
+      this.composeWith('tight:extension', {
         local: require.resolve('../extension')
+      });
+
+      this.composeWith('tight:theme', {
+        local: require.resolve('../theme')
       });
     }
   },
