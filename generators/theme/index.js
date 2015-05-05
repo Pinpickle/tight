@@ -75,7 +75,12 @@ module.exports = yeoman.generators.Base.extend({
   writing: {
     files: function () {
       this.directory('templates', 'templates');
-      this.directory('src/less', 'src/less');
+      if (this.props.theme.css === 'less') {
+        this.directory('src/less', 'src/less');
+      } else {
+        this.directory('src/css', 'src/css');
+      }
+
       this.directory('src/images', 'src/images');
 
       this.fastTemplate(['bower.json', 'config.yml', 'gulpfile.js', 'package.json', 'src/htaccess', 'src/js/main.js', 'src/js/modules/example-module.js', 'src/js/contexts/page-home.js',

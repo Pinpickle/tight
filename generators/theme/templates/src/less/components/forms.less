@@ -1,0 +1,148 @@
+/* ==========================================================================
+   Forms
+   ========================================================================== */
+.form-row {
+  &:extend(.clearfix all);
+
+  margin: @punit / 2 0;
+}
+
+.form-control {
+  width: 100%;
+  display: block;
+  padding: 0.5em;
+  box-sizing: border-box;
+  height: 2em;
+
+  border-radius: 5px;
+  border: 1px solid @grey-light;
+
+  background-color: @brand-white;
+
+  line-height: 1;
+
+  transition-property: border-color, box-shadow;
+  transition-duration: 0.2s;
+
+  &:focus {
+    outline: none;
+    border-color: lighten(@brand-primary, 20%);
+    box-shadow: 0 0 5px fade(@brand-primary, 50%);
+  }
+
+  &:disabled {
+    background-color: @grey-lightest;
+    border-color: @grey-light;
+    color: @grey-light;
+  }
+
+  select& {
+    padding: 0 0.5em;
+    line-height: 2em;
+  }
+}
+
+.form-label {
+  display: block;
+  width: 100%;
+
+  color: @grey;
+
+  input[type="checkbox"], input[type="radio"] {
+    margin-right: 5px;
+  }
+
+  .form-label-container & {
+    margin: @punit / 2 0;
+  }
+}
+
+// Button reset
+button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.button, a.button {
+  margin-right: 5px;
+  display: inline-block;
+
+  padding: 8px;
+
+  border-radius: 100px;
+  border: 2px solid @brand-primary;
+
+  background-color: transparent;
+  line-height: 1;
+
+  transition-property: background-color, border-color, color;
+  transition-duration: 0.2s;
+
+  .button-override(@brand-primary, @brand-white);
+
+  &:focus {
+    outline: none;
+    text-decoration: none;
+  }
+
+  &:focus:active {
+    box-shadow: none;
+  }
+}
+
+.button-override(@colour, @secondary) {
+  border-color: @colour;
+  color: @colour;
+
+  &:hover {
+    color: @secondary;
+    background-color: @colour;
+    border-color: @colour;
+  }
+
+  &:active {
+    border-color: darken(@colour, 10%);
+    background-color: darken(@colour, 10%);
+    color: @secondary;
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 2px @colour;
+  }
+}
+
+@media @medium {
+  .form-row-inline {
+    margin: @punit 0;
+
+    .form-label-container {
+      vertical-align: middle;
+      float: left;
+      margin: 0;
+
+      width: 20%;
+      box-sizing: border-box;
+      padding-right: @punit / 2;
+
+      text-align: right;
+
+      .form-label {
+        margin: 0;
+        line-height: 1em;
+        height: 1em;
+        padding: 0.5em 0;
+      }
+    }
+
+    .form-control-container {
+      float: left;
+
+      width: 80%;
+
+      &:only-child {
+        margin-left: 20%;
+      }
+    }
+  }
+}

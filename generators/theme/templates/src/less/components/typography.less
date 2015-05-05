@@ -1,0 +1,124 @@
+/* ==========================================================================
+   CSS Typography
+   ========================================================================== */
+
+/* Base Styles
+   ========================================================================== */
+
+html {
+  font-family: @font-body;
+  font-weight: @font-weight-body;
+  color: @text-colour;
+}
+
+body {
+  font-size: 18px;
+  line-height: 1.2;
+}
+
+.margin-element {
+  margin: @punit / 2 0;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  &:first-child {
+    margin-top: 0;
+  }
+}
+
+/* Body Copy
+   ========================================================================== */
+
+h1 { font-size: 2em; }
+h2 { font-size: 1.5em; }
+h3 { font-size: 1.17em; }
+h4 { font-size: 1em; }
+h5 { font-size: 0.83em; }
+h6 { font-size: 0.75em; }
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: @font-heading;
+  color: @heading-colour;
+
+  &:extend(.margin-element all);
+  margin-top: 1em;
+
+  &:first-child {
+    margin-top: 0;
+  }
+
+  & .small {
+    font-size: 0.8em;
+    font-weight: @font-weight-body;
+    opacity: 0.8;
+  }
+}
+
+h1, h2, h3 {
+  font-weight: @font-weight-heading;
+}
+
+.grand-heading {
+  font-size: 1.9em;
+}
+
+p, ul, ol {
+  &:extend(.margin-element all);
+}
+
+.emphasis-paragraph, .mild-emphasis-paragraph {
+  font-size: 1.1em;
+}
+
+@media @small {
+  .grand-heading {
+    font-size: 2.5em;
+  }
+}
+
+@media @medium {
+  h1 { font-size: 2.74em; }
+  h2 { font-size: 1.96em; }
+  h3 { font-size: 1.4em; }
+
+  .emphasis-paragraph {
+    font-size: 1.5em;
+    font-weight: lighter;
+  }
+
+  .grand-heading {
+    font-size: 3.5em;
+
+    .small {
+      font-size: 0.6em;
+    }
+  }
+}
+
+
+/* Anchors
+   ========================================================================== */
+
+a, a:visited {
+  text-decoration: none;
+  color: @link-colour;
+  font-weight: bold;
+}
+
+a:hover {
+  color: @link-hover-colour;
+}
+
+a:focus {
+  outline: none;
+  text-decoration: underline;
+}
+
+/* Utility
+   ========================================================================== */
+
+.centre {
+  text-align: center;
+}

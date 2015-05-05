@@ -1,0 +1,87 @@
+/* Colours
+   ========================================================================== */
+// Based on Bootstrap colouring
+@brand-white: #fff;
+@brand-primary: #e66754;
+@brand-secondary: #2f5889;
+
+@grey-base: #000;
+@grey-darker: lighten(@grey-base, 13.5%);
+@grey-dark: lighten(@grey-base, 20%);
+@grey: lighten(@grey-base, 50%);
+@grey-light: lighten(@grey-base, 60%);
+@grey-lighter: lighten(@grey-base, 93.5%);
+@grey-lightest: lighten(@grey-base, 96%);
+
+@background-colour: @grey-lightest;
+
+// You may wish to use these variables for something
+/*@header-colour: @brand-white;
+@header-text-colour: @brand-grey;
+
+@footer-colour: @background-colour;
+@footer-text-colour: @grey-light;*/
+
+@link-colour: @brand-primary;
+@link-hover-colour: lighten(@link-colour, 20%);
+
+@heading-colour: darken(@brand-primary, 30%);
+@text-colour: @brand-dark-grey;
+
+@danger-colour: @brand-primary;
+
+/* Fonts
+   ========================================================================== */
+@font-body: 'Helvetica Neue', Arial, sans-serif;
+@font-weight-body: normal;
+@font-heading: 'Helvetica Neue', Arial, sans-serif;
+@font-weight-heading: lighter;
+
+/* Units
+   ========================================================================== */
+@wrapper-width: 800px;
+@wrapper-width-large: 1000px;
+@punit: 20px;
+
+/* Media Queries
+   ========================================================================== */
+// Adapted from http://foundation.zurb.com/docs/media-queries.html
+
+// Here we define the upper bounds for each media size
+@xsmall-size: 480px;
+@small-size: 800px;
+@medium-size: 1000px;
+@large-size: 1440px;
+@xlarge-size: 1920px;
+
+@xsmall-plus: (@xsmall-size + 1);
+@small-plus: (@small-size + 1);
+@medium-plus: (@medium-size + 1);
+@large-plus: (@large-size + 1);
+@xlarge-plus: (@xlarge-size + 1);
+
+// Media Queries
+@screen-sizes: 'xsmall', 'small', 'medium', 'large', 'xlarge', 'xxlarge';
+
+@screen: ~"only screen";
+
+@landscape: ~"@{screen} and (orientation: landscape)";
+@portrait: ~"@{screen} and (orientation: portrait)";
+
+@xsmall: @screen;
+@xsmall-only: ~"@{screen} and (max-width: @{xsmall-size})";
+
+@small: ~"@{screen} and (min-width:@{xsmall-plus})";
+@small-only: ~"@{screen} and (min-width:@{xsmall-plus}) and (max-width:@{small-size})";
+
+@medium: ~"@{screen} and (min-width:@{small-plus})";
+@medium-only: ~"@{screen} and (min-width:@{small-plus}) and (max-width:@{medium-size})";
+
+@large: ~"@{screen} and (min-width:@{medium-plus})";
+@large-only: ~"@{screen} and (min-width:@{medium-plus}) and (max-width:@{large-size})";
+
+@xlarge: ~"@{screen} and (min-width:@{large-plus})";
+@xlarge-only: ~"@{screen} and (min-width:@{large-plus}) and (max-width:@{xlarge-size})";
+
+@xxlarge: ~"@{screen} and (min-width:@{xlarge-plus})";
+@xxlarge-only: @xxlarge;
