@@ -1,11 +1,8 @@
 'use strict';
 var yeoman = require('yeoman-generator');
 var chalk = require('chalk');
-var yosay = require('yosay');
-var slug = require('slug');
-var fs = require('fs');
-var _ = require('lodash');
 var path = require('path');
+var lib = require('../../lib');
 
 module.exports = yeoman.generators.Base.extend({
   constructor: function () {
@@ -17,17 +14,7 @@ module.exports = yeoman.generators.Base.extend({
     this.destinationRoot(truepath);
 
     this.fastTemplate = function (files) {
-      if (!Array.isArray(files)) {
-        files = [files];
-      }
-
-      files.forEach(function(filepath) {
-        this.fs.copyTpl(
-          this.templatePath(filepath),
-          this.destinationPath(filepath),
-          this.props
-        );
-      }.bind(this));
+      lib.fastTemplate(this, files);
     };
   },
 
