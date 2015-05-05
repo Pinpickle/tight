@@ -1,0 +1,4 @@
+exports FTPHOST=
+exports FTPUSER=
+exports FTPPASS=
+exports FTPDIR=

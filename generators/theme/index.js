@@ -6,20 +6,23 @@ var lib = require('../../lib');
 
 module.exports = yeoman.generators.Base.extend({
   constructor: function () {
+
     yeoman.generators.Base.apply(this, arguments);
 
     this.props = this.config.getAll();
 
     var truepath = path.join('theme', this.props.shortName.toLowerCase());
     if (this.props.webroot === '') {
-      this.destinationRoot(path.join(truepath));
+      this.destinationRoot(path.join('..', truepath));
     } else {
-      this.destinationRoot(path.join(this.props.webroot, truepath));
+      this.destinationRoot(path.join('..', this.props.webroot, truepath));
     }
 
     this.fastTemplate = function (files) {
       lib.fastTemplate(this, files);
     };
+
+    console.log(this);
   },
 
   initializing: function () {
@@ -84,7 +87,7 @@ module.exports = yeoman.generators.Base.extend({
       this.directory('src/images', 'src/images');
 
       this.fastTemplate(['bower.json', 'config.yml', 'gulpfile.js', 'package.json', 'src/htaccess', 'src/js/main.js', 'src/js/modules/example-module.js', 'src/js/contexts/page-home.js',
-                         {gitignore: '.gitignore', bowerrc: '.bowerrc'}]);
+                         {gitignore: '.gitignore', bowerrc: '.bowerrc', env: '.env'}]);
     }
   }
 });

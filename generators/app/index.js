@@ -67,6 +67,13 @@ module.exports = yeoman.generators.Base.extend({
         store: true
       }, {
         type: 'input',
+        name: 'devUrl',
+        message: 'What URL will this use for development?',
+        default: function (input) {
+          return 'http://localhost/' + input.shortName.toLowerCase();
+        }
+      }, {
+        type: 'input',
         name: 'license',
         message: 'What license does this use?',
         default: 'None'
