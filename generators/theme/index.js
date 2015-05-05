@@ -86,8 +86,11 @@ module.exports = yeoman.generators.Base.extend({
 
       this.directory('src/images', 'src/images');
 
-      this.fastTemplate(['bower.json', 'config.yml', 'gulpfile.js', 'package.json', 'src/htaccess', 'src/js/main.js', 'src/js/modules/example-module.js', 'src/js/contexts/page-home.js',
-                         {gitignore: '.gitignore', bowerrc: '.bowerrc', env: '.env'}]);
+      this.fastTemplate(['config.yml', 'gulpfile.js', 'package.json', 'src/htaccess', 'src/js/main.js', 'src/js/modules/example-module.js', 'src/js/contexts/page-home.js',
+                         {gitignore: '.gitignore', env: '.env'}]);
+      if ((this.props.package === 'bower') || (this.props.package === 'both')) {
+        this.fastTenokate(['bower.json', { bowerrc: '.bowerrc' }]);
+      }
     }
   }
 });

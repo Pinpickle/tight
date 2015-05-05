@@ -1,5 +1,25 @@
 {
-  "name": "package",
-  "version": "0.0.0",
-  "dependencies": {}
+  "name": "<%= hyphenName %>",
+  "version": "0.0.1",
+  "main": "gulpfile.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "None",
+  "devDependencies": {
+    "del": "^1.1.1",
+    "gulp": "^3.8.10",
+    "gulp-changed": "^1.2.1",
+    "gulp-shell": "^0.2.11",
+    "gulp-src-ordered-globs": "^1.0.3",
+    "gulp-zip": "^2.0.2",
+    "node-env-file": "^0.1.4",
+    "node-notifier": "^4.0.3",
+    "run-sequence": "^1.0.2",
+    "gulp-ftp": "^1.0.1"
+  }
 }

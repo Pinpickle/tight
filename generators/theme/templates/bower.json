@@ -1,0 +1,19 @@
+{
+  "name": "<%= shortName.toLowerCase() %>-theme",
+  "version": "0.0.1",
+  "keywords": [
+    "twig",
+    "theme",
+    "bolt"
+  ],
+  "license": "<%= license %>",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "src/bower"
+  ],
+  "private": true,
+  "devDependencies": {
+    <% if (theme.package === 'bower') { %>"jquery": "~1"<% } $>
+  }
+}
