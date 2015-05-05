@@ -4,6 +4,8 @@
   "description": "",
   "devDependencies": {
     "browser-sync": "^2.6.4",
+    <% if (theme.js === 'browserify') %>"browserify": "^8.1.3",<% } %>
+    <% if ((theme.bower) && (theme.js === 'browserify')) { %>"debowerify": "^1.2.0",<% } %>
     "del": "^1.0.0",
     "gulp": "^3.8.10",
     "gulp-autoprefixer": "^2.0.0",
@@ -13,7 +15,7 @@
     "gulp-filter": "^2.0.2",
     "gulp-iconfont": "^1.0.0",
     "gulp-if": "^1.2.5",
-    <% if (theme.css === 'less') { %>"gulp-less": "^1.3.6",<% endif %>
+    <% if (theme.css === 'less') { %>"gulp-less": "^1.3.6",<% } %>
     "gulp-load-plugins": "^0.10.0",
     "gulp-minify-css": "^0.3.11",
     "gulp-minify-html": "^0.1.7",
@@ -24,10 +26,12 @@
     "gulp-svgmin": "^1.1.1",
     "gulp-uglify": "^1.0.2",
     "gulp-util": "^3.0.1",
-    <% if (theme.package !== 'bower') { %>"jquery": "~1",<% } $>
+    <% if (theme.bower) { %>"jquery": "~1",<% } $>
     "merge-stream": "^0.1.7",
     "node-env-file": "^0.1.4",
     "run-sequence": "^1.0.2",
+    <% if (theme.js === 'browserify') %>"vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.0.0",<% } %>
     "yargs": "^1.3.3"
   },
   "scripts": {

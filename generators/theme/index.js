@@ -67,6 +67,9 @@ module.exports = yeoman.generators.Base.extend({
     }];
 
     this.prompt(prompts, function (props) {
+      props.bower = (props.package === 'bower') || (props.package === 'both');
+      props.npm = (props.package === 'npm') || (props.package === 'bower');
+
       this.props.theme = props;
       this.config.set({ theme: props });
       this.config.save();
@@ -88,7 +91,7 @@ module.exports = yeoman.generators.Base.extend({
 
       this.fastTemplate(['config.yml', 'gulpfile.js', 'package.json', 'src/htaccess', 'src/js/main.js', 'src/js/modules/example-module.js', 'src/js/contexts/page-home.js',
                          {gitignore: '.gitignore', env: '.env'}]);
-      if ((this.props.package === 'bower') || (this.props.package === 'both')) {
+      if (props.bower) {
         this.fastTenokate(['bower.json', { bowerrc: '.bowerrc' }]);
       }
     }
