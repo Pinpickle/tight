@@ -33,7 +33,7 @@ locale: en_GB
 # file in your theme's folder. If a template is set there, it will override the
 # setting here.
 maintenance_mode: false
-maintenance_template: maintenance_default.twig
+maintenance_template: pages/maintenance.twig
 
 # The hour of the day for the internal cron task scheduler to run daily, weekly,
 # monthly and yearly jobs.  Default: 3 (3 am)
@@ -55,7 +55,7 @@ cron_hour: 3
 # the website, be sure to check for a config.yml file in your theme's folder. If
 # a template is set there, it will override the setting here.
 homepage: page/home
-homepage_template: pages/homepage.twig
+homepage_template: pages/home.twig
 
 # The default content for the 404 page. Uses the 'record_template' template by default.
 # Make sure this is set to an existing record, otherwise visitors will get an error-page
