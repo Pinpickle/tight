@@ -1,0 +1,11 @@
+# sitemap settings
+
+template: assets/sitemap.twig
+xml_template: assets/sitemap_xml.twig
+
+ignore:
+  - /not-found
+
+# ignore by "slug" of contenttype
+ignore_contenttype:
+  - resources

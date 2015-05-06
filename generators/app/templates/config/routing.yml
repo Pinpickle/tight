@@ -1,0 +1,161 @@
+# This file defines user-definable routes for the frontend of your Bolt website.
+# Check below for examples, or read the documentation at
+# http://docs.bolt.cm/templates-routes#routing
+
+# ------------------------------------------------------------------------------
+# Place your own routes here, that have a HIGHER priority than the default routes.
+
+
+
+# ------------------------------------------------------------------------------
+# These are the routes defining the default behaviour of Bolt's frontend.
+# Changing these might give unexpected results or even break your website. If
+# possible, only add NEW routes above or below these.
+
+homepage:
+    path: '/'
+    defaults:
+        _controller: 'Bolt\Controllers\Frontend::homepage'
+
+search:
+    path: '/search'
+    defaults:
+        _controller: 'Bolt\Controllers\Frontend::search'
+
+preview:
+    path: '/preview/{contenttypeslug}'
+    defaults:
+        _controller: 'Bolt\Controllers\Frontend::preview'
+    requirements:
+        contenttypeslug: 'Bolt\Controllers\Routing::getAnyContentTypeRequirement'
+
+# These default routes usually just get in the way. Uncomment them if you want them
+#
+# contentlink:
+#     path: '/{contenttypeslug}/{slug}'
+#     defaults:
+#         _controller: 'Bolt\Controllers\Frontend::record'
+#     requirements:
+#         contenttypeslug: 'Bolt\Controllers\Routing::getAnyContentTypeRequirement'
+#
+# taxonomylink:
+#     path: '/{taxonomytype}/{slug}'
+#     defaults:
+#         _controller: 'Bolt\Controllers\Frontend::taxonomy'
+#     requirements:
+#         taxonomytype: 'Bolt\Controllers\Routing::getAnyTaxonomyTypeRequirement'
+#
+# contentlisting:
+#     path: '/{contenttypeslug}'
+#     defaults:
+#         _controller: 'Bolt\Controllers\Frontend::listing'
+#     requirements:
+#         contenttypeslug: 'Bolt\Controllers\Routing::getPluralContentTypeRequirement'
+
+# ------------------------------------------------------------------------------
+# Place your own routes here, that have a LOWER priority than the default routes.
+
+
+
+
+# Now going to mywebsite.com/contact will route to page/contact
+# All other routes should have a higher priority than this one
+
+pagebinding:
+    path: '/{slug}'
+    defaults:
+        _controller: 'Bolt\Controllers\Frontend::record'
+        contenttypeslug: 'page'
+    contenttype: pages
+
+# ------------------------------------------------------------------------------
+# Routes examples:
+
+# Example to route old '.html' pages to pages genereated by bolt.
+
+# oldpages:
+#     path: '/{slug}.html'
+#     defaults:
+#         _controller: 'Bolt\Controllers\Frontend::record'
+#         contenttypeslug: 'page'
+#     requirements:
+#         slug: '[a-z0-9-_]+'
+
+
+# Example route with a host requirement
+
+# example:
+#     path: '/example'
+#     defaults:
+#         _controller: 'Bolt\Controllers\Frontend::record'
+#         contenttypeslug: 'page'
+#         slug: 'example'
+#     host: 'www.mydomain.org'
+
+
+# Example override for a specific contenttype
+
+# pagebinding:
+#     path: '/{slug}'
+#     defaults:
+#         _controller: 'Bolt\Controllers\Frontend::record'
+#         contenttypeslug: 'page'
+#     contenttype: pages
+
+
+
+# Example single record override
+
+# aboutbinding:
+#     path: '/about'
+#     defaults:
+#         _controller: 'Bolt\Controllers\Frontend::record'
+#         contenttypeslug: 'page'
+#         slug: 'about'
+#     recordslug: 'page/about'
+
+
+
+# Example: Use the following to add a route for contenttypes in your URL scheme. In this example we
+# add routing for the 'chapter' taxonomy, so we can link to /meta/lorum-ipsum or /main/foo-bar.
+# note that the 'showcase' in the defaults and requirements determine the fallback, for when
+# no option is specified in a specifid record. Basically, this makes the route respond to the
+# default route /showcase/foo-bar as well.
+
+# chapterbinding:
+#     path: '/{chapters}/{slug}'
+#     defaults:
+#         _controller: 'Bolt\Controllers\Frontend::record'
+#         contenttypeslug: 'showcases'
+#         chapters: 'showcase'
+#     requirements:
+#         chapters: [ 'Bolt\Controllers\Routing::getTaxonomyRequirement', ['chapters', 'showcase'] ]
+#     contenttype: showcases
+
+# categorybinding:
+#     path: '/{categories}/{slug}'
+#     defaults:
+#         _controller: 'Bolt\Controllers\Frontend::record'
+#         contenttypeslug: 'showcases'
+#         categories': 'none'
+#     requirements:
+#         categories: [ 'Bolt\Controllers\Routing::getTaxonomyRequirement', ['categories', 'none'] ]
+#     contenttype: showcases
+
+
+# Supported internal defaults are:
+#  _controller   the controller class::method to be called
+#  _before       the before to call, if non-existent the 'before()' of the controller will be called
+#  _after        the after to call, if non-existent the 'after()' of the controller will be called
+#
+# Both _before and _after support a shortcut notation which re-uses the controller class: '::before'
+
+
+# Example: rendering a "static" template from the current theme with no associated record/content.
+# Note that you can still load and render content from within the template.
+
+# templatebinding:
+#     path: '/static-page/'
+#     defaults:
+#         _controller: 'Bolt\Controllers\Frontend::template'
+#         template: 'static-page'

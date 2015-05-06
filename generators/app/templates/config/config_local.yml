@@ -1,0 +1,34 @@
+# These settings override the config settings for individual environments. Good for testing!
+
+debug: true
+
+# Set up your mail!
+# Head over to https://mandrill.com/ and get an account for local development
+# Probably best to use something else for production
+
+# mailoptions:
+#     transport: smtp
+#     spool: true
+#     host: smtp.mandrillapp.com
+#     username:
+#     password:
+#     port: 587
+#     encryption: tls
+
+# You could use the mail function, but its unpredictable
+# mailoptions:
+#    transport: mail
+#    spool: false
+
+
+# This is a little less secure, but it makes development easier
+cookies_use_remoteaddr: false
+cookies_use_browseragent: false
+cookies_use_httphost: false
+
+# If you want to use MySQL as your local DB (and not SQLite), enter the details below
+# database:
+#   driver: mysql
+#   databasename:
+#   username:
+#   password:

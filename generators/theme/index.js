@@ -80,7 +80,7 @@ module.exports = lib.TightGenerator.extend({
 
       this.directory('src/images', 'src/images');
 
-      this.fastTemplate(['config.yml', 'gulpfile.js', 'package.json', 'src/htaccess', 'src/js/main.js', 'src/js/modules/example-module.js', 'src/js/contexts/page-home.js',
+      this.fastTemplate(['config.yml', 'gulpfile.js', 'package.json', 'README.md', 'src/htaccess', 'src/js/main.js', 'src/js/modules/example-module.js', 'src/js/contexts/page-home.js',
                          {gitignore: '.gitignore', env: '.env'}]);
       if (this.props.bower) {
         this.fastTemplate(['bower.json', { bowerrc: '.bowerrc' }]);

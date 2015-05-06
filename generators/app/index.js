@@ -9,6 +9,12 @@ var lib = require('../../lib');
 var nunjucks = require('nunjucks');
 
 module.exports = lib.TightGenerator.extend({
+  constructor: function () {
+    lib.TightGenerator.apply(this, arguments);
+
+    this.option('dontCompose');
+  },
+
   initializing: function () {
     this.pkg = require('../../package.json');
   },
@@ -123,13 +129,20 @@ module.exports = lib.TightGenerator.extend({
       // Sorry Yeoman, need to get this on the file system
       fs.writeFileSync(this.destinationPath('composer.json'), nunjucks.renderString(fs.readFileSync(this.templatePath('composer.json')).toString(), this.props));
 
-      /*var install = this.spawnCommand('composer', ['install']);
-      install.on('close', function () {(*/
+
+      var installBolt = function () {
         var bolt = this.spawnCommand('composer', ['bolt-update']);
         bolt.on('close', function () {
           done();
         });
-      //}.bind(this));
+      }.bind(this);
+
+      if (this.options.dontCompose) {
+        installBolt();
+      } else {
+        var install = this.spawnCommand('composer', ['install']);
+        install.on('close', installBolt);
+      }
     },
 
     webroot: function () {
@@ -188,12 +201,21 @@ module.exports = lib.TightGenerator.extend({
                          { editorconfig: '.editorconfig', env: '.env', gitignore: '.gitignore', htaccess: '.htaccess' }]);
     },
 
-    projectfiles: function () {
-
+    configfiles: function () {
+      this.fastTemplate({
+        'config/config.yml': 'app/config/config.yml',
+        'config/config_local.yml': 'app/config/config_local.yml',
+        'config/contenttypes.yml': 'app/config/contenttypes.yml',
+        'config/routing.yml': 'app/config/routing.yml',
+        'config/sitemap.bolt.yml': 'app/config/extensions/sitemap.bolt.yml'
+      });
     }
   },
 
   install: function () {
     this.npmInstall();
+    this.spawnCommand('composer', ['install'], {
+      cwd: path.join(this.destinationRoot(), 'extensions')
+    });
   }
 });
