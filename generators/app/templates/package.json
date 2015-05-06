@@ -8,8 +8,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "None",
+  "author": "{{ username }}",
+  "private": true,
+  "license": "{{ license }}",
   "devDependencies": {
     "del": "^1.1.1",
     "gulp": "^3.8.10",
