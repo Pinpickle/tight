@@ -183,7 +183,6 @@ module.exports = lib.TightGenerator.extend({
     subGenerators: function () {
       this.config.set(this.props);
       this.config.save();
-      //this.config.save();
 
       this.composeWith('tight:extension', {
         local: require.resolve('../extension')

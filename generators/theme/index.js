@@ -81,10 +81,27 @@ module.exports = lib.TightGenerator.extend({
       this.directory('src/images', 'src/images');
 
       this.fastTemplate(['config.yml', 'gulpfile.js', 'package.json', 'README.md', 'src/htaccess', 'src/js/main.js', 'src/js/modules/example-module.js', 'src/js/contexts/page-home.js',
-                         {gitignore: '.gitignore', env: '.env'}]);
+                         {gitignore: '.gitignore', env: '.env', jshintrc: '.jshintrc'}]);
       if (this.props.bower) {
         this.fastTemplate(['bower.json', { bowerrc: '.bowerrc' }]);
       }
     }
+  },
+
+  install: function () {
+    var done = this.async();
+    var themePath = path.join(this.destinationRoot(), this.pathPrefix);
+
+    var install = this.spawnCommand('npm', ['install'], {
+      cwd: themePath
+    });
+    install.on('close', function () {
+      var gulp = this.spawnCommand('gulp', ['build'], {
+        cwd: themePath
+      });
+      gulp.on('close', function () {
+        done();
+      });
+    }.bind(this));
   }
 });
