@@ -38,7 +38,7 @@ module.exports = lib.TightGenerator.extend({
         type: 'input',
         name: 'name',
         message: 'Name',
-        default: 'Cool Website',
+        default: 'Tight Website',
         validate: function (input) {
           if (input === '') {
             return 'Name cannot be blank!';
@@ -57,7 +57,7 @@ module.exports = lib.TightGenerator.extend({
 
           return true;
         },
-        default: 'Cool'
+        default: 'Tight'
       }, {
         type: 'input',
         name: 'owner',
@@ -69,7 +69,7 @@ module.exports = lib.TightGenerator.extend({
 
           return true;
         },
-        default: 'CoolCo',
+        default: 'TightCo',
         store: true
       }, {
         type: 'input',
@@ -86,7 +86,8 @@ module.exports = lib.TightGenerator.extend({
       }, {
         type: 'input',
         name: 'description',
-        message: 'Describe this project in a few words'
+        message: 'Describe this project in a few words',
+        default: 'A tight description'
       }, {
         type: 'input',
         name: 'username',
