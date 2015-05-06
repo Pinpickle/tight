@@ -69,15 +69,15 @@ var cleanup = [
   './dist/vendor/swiftmailer/swiftmailer/notes/**/*'
 ];
 
-var themeDeploy = [
-  './theme/{{ lowerShortName }}/config.yml',
-  './theme/{{ lowerShortName }}/rev-manifest.json',
-  './theme/{{ lowerShortName }}/assets/.htaccess',
-  './theme/{{ lowerShortName }}/assets/**/*',
-  './theme/{{ lowerShortName }}/templates/**/*'
-];
+var themeBase = './{% if webroot != '' %}{{ webroot }}/{% endif %}theme/{{ lowerShortName }}/';
 
-var themeBase = '{% if webroot != '' %}{{ webroot }}/{% endif %}theme/{{ lowerShortName }}/';
+var themeDeploy = [
+  themeBase + 'config.yml',
+  themeBase + 'rev-manifest.json',
+  themeBase + 'assets/.htaccess',
+  themeBase + 'assets/**/*',
+  themeBase + 'templates/**/*'
+];
 
 gulp.task('bundle:clean', function(cb) {
   del(['./dist/**/*'], cb);
@@ -128,7 +128,7 @@ gulp.task('deploy:themedeploy', function() {
   var conn = createConnection();
 
   return gulp.src(themeDeploy, {base: themeBase})
-    .pipe(changed('./theme/{{ lowerShortName }}-deployed', {hasChanged: changed.compareSha1Digest}))
+    .pipe(changed('./{% if webroot != '' %}{{ webroot }}/{% endif %}theme/{{ lowerShortName }}-deployed', {hasChanged: changed.compareSha1Digest}))
     .pipe(conn.dest(process.env.FTPDIR + '/' + themeBase))
     .on('finish', function() {
       notifier.notify({title: '{{ name }} Theme Deploy Complete'});
