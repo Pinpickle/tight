@@ -1,21 +1,15 @@
 'use strict';
-var yeoman = require('yeoman-generator');
 var chalk = require('chalk');
 var path = require('path');
 var lib = require('../../lib');
 
-module.exports = yeoman.generators.Base.extend({
+module.exports = lib.TightGenerator.extend({
   constructor: function () {
-    yeoman.generators.Base.apply(this, arguments);
+    lib.TightGenerator.apply(this, arguments);
 
     this.props = this.config.getAll();
 
-    var truepath = path.join('extensions', 'local', this.props.owner.toLowerCase(), this.props.shortName.toLowerCase());
-    this.destinationRoot(truepath);
-
-    this.fastTemplate = function (files) {
-      lib.fastTemplate(this, files);
-    };
+    this.pathPrefix = path.join('extensions', 'local', this.props.owner.toLowerCase(), this.props.shortName.toLowerCase());
   },
 
   initializing: function () {

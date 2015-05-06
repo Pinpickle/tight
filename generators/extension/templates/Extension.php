@@ -1,6 +1,6 @@
 <?php
 
-namespace Bolt\Extension\<%= owner %>\<%= shortName %>;
+namespace Bolt\Extension\{{ owner }}\{{ shortName }};
 
 use Bolt\Application;
 use Bolt\BaseExtension;
@@ -12,7 +12,7 @@ class Extension extends BaseExtension {
 
     public function initialize() {
         $this->loader = new Psr4ClassLoader();
-        $this->loader->addPrefix('Bolt\\Extension\\<%= owner %>\\<%= shortName %>', __DIR__ . '/src');
+        $this->loader->addPrefix('Bolt\\Extension\\{{ owner }}\\{{ shortName }}', __DIR__ . '/src');
         $this->loader->register();
 
         $this->twigHelper = new TwigHelper();
@@ -20,6 +20,6 @@ class Extension extends BaseExtension {
     }
 
     public function getName() {
-        return "<%= name %> Extension";
+        return "{{ name }} Extension";
     }
 }

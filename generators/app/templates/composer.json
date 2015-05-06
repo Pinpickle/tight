@@ -1,7 +1,7 @@
 {
-    "name": "<%= owner.toLowerCase() %>/<%= hyphenName %>",
-    "description": "<%= description %>",
-    "license": "<%= license %>",
+    "name": "{{ owner.toLowerCase() }}/{{ hyphenName }}",
+    "description": "{{ description }}",
+    "license": "{{ license }}",
 
     "require": {
         "bolt/bolt": "~2.1",
@@ -11,8 +11,8 @@
     },
     "authors": [
         {
-            "name": "<%= username %>",
-            "email": "<%= email %>"
+            "name": "{{ username }}",
+            "email": "{{ email }}"
         }
     ],
     "minimum-stability": "beta",

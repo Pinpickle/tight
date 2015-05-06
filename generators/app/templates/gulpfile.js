@@ -61,14 +61,14 @@ var cleanup = [
 ];
 
 var themeDeploy = [
-  './theme/<%= lowerShortName %>/config.yml',
-  './theme/<%= lowerShortName %>/rev-manifest.json',
-  './theme/<%= lowerShortName %>/assets/.htaccess',
-  './theme/<%= lowerShortName %>/assets/**/*',
-  './theme/<%= lowerShortName %>/templates/**/*'
+  './theme/{{ lowerShortName }}/config.yml',
+  './theme/{{ lowerShortName }}/rev-manifest.json',
+  './theme/{{ lowerShortName }}/assets/.htaccess',
+  './theme/{{ lowerShortName }}/assets/**/*',
+  './theme/{{ lowerShortName }}/templates/**/*'
 ];
 
-var themeBase = 'theme/<%= lowerShortName %>/';
+var themeBase = 'theme/{{ lowerShortName }}/';
 
 gulp.task('bundle:clean', function(cb) {
   del(['./dist/**/*'], cb);
@@ -92,7 +92,7 @@ gulp.task('bundle:cleanup', function(cb) {
 
 gulp.task('bundle:zip', function() {
   return gulp.src(['./dist/**/*', './dist/**/.htaccess'], {base: './dist'})
-    .pipe(zip('<%= lowerShortName %>-bundle.zip'))
+    .pipe(zip('{{ lowerShortName }}-bundle.zip'))
     .pipe(gulp.dest('dist'));
 });
 
@@ -104,7 +104,7 @@ gulp.task('bundle', function(cb) {
 // gulp bundle
 // first
 gulp.task('deploy:app', function() {
-  return gulp.src('dist/<%= lowerShortName %>-bundle.zip', {base: './dist'})
+  return gulp.src('dist/{{ lowerShortName }}-bundle.zip', {base: './dist'})
     .pipe(ftp({
       host: process.env.FTPHOST,
       user: process.env.FTPUSER,
@@ -120,7 +120,7 @@ gulp.task('deploy:app', function() {
 
 gulp.task('deploy:themedeploy', function() {
   return gulp.src(themeDeploy, {base: themeBase})
-    .pipe(changed('./theme/<%= lowerShortName %>-deployed', {hasChanged: changed.compareSha1Digest}))
+    .pipe(changed('./theme/{{ lowerShortName }}-deployed', {hasChanged: changed.compareSha1Digest}))
     .pipe(ftp({
       host: process.env.FTPHOST,
       user: process.env.FTPUSER,
@@ -133,12 +133,12 @@ gulp.task('deploy:themedeploy', function() {
 });
 
 gulp.task('deploy:themeclean', ['deploy:themedeploy'], function(cb) {
-  del(['<%= lowerShortName %>-deployed/**/*'], cb);
+  del(['{{ lowerShortName }}-deployed/**/*'], cb);
 });
 
 gulp.task('deploy:theme', ['deploy:themeclean'], function() {
   return gulp.src(themeDeploy, {base: themeBase})
-    .pipe(gulp.dest('theme/<%= lowerShortName %>-deployed'));
+    .pipe(gulp.dest('theme/{{ lowerShortName }}-deployed'));
 });
 
 

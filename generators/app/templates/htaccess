@@ -35,7 +35,7 @@ Options -Indexes
   # RewriteBase /
 
   RewriteCond %{ENV:REDIRECT_STATUS} ^$
-  RewriteCond %{ENV:BASEPATH} !^theme/<%= shortName.toLowerCase() %>/assets
+  RewriteCond %{ENV:BASEPATH} !^theme/{{ lowerShortName }}/assets
   RewriteCond %{ENV:BASEPATH} !^files
   RewriteCond %{ENV:BASEPATH} !^bolt-public
   RewriteCond %{ENV:BASEPATH} !=favicon.ico

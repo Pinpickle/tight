@@ -1,28 +1,21 @@
 'use strict';
-var yeoman = require('yeoman-generator');
 var chalk = require('chalk');
 var path = require('path');
 var lib = require('../../lib');
 
-module.exports = yeoman.generators.Base.extend({
+module.exports = lib.TightGenerator.extend({
   constructor: function () {
 
-    yeoman.generators.Base.apply(this, arguments);
+    lib.TightGenerator.apply(this, arguments);
 
     this.props = this.config.getAll();
 
     var truepath = path.join('theme', this.props.shortName.toLowerCase());
     if (this.props.webroot === '') {
-      this.destinationRoot(path.join('..', truepath));
+      this.pathPrefix = path.join(truepath);
     } else {
-      this.destinationRoot(path.join('..', this.props.webroot, truepath));
+      this.pathPrefix = path.join(this.props.webroot, truepath);
     }
-
-    this.fastTemplate = function (files) {
-      lib.fastTemplate(this, files);
-    };
-
-    console.log(this);
   },
 
   initializing: function () {
@@ -71,8 +64,6 @@ module.exports = yeoman.generators.Base.extend({
       props.npm = (props.package === 'npm') || (props.package === 'bower');
 
       this.props.theme = props;
-      this.config.set({ theme: props });
-      this.config.save();
 
       done();
     }.bind(this));
@@ -91,8 +82,8 @@ module.exports = yeoman.generators.Base.extend({
 
       this.fastTemplate(['config.yml', 'gulpfile.js', 'package.json', 'src/htaccess', 'src/js/main.js', 'src/js/modules/example-module.js', 'src/js/contexts/page-home.js',
                          {gitignore: '.gitignore', env: '.env'}]);
-      if (props.bower) {
-        this.fastTenokate(['bower.json', { bowerrc: '.bowerrc' }]);
+      if (this.props.bower) {
+        this.fastTemplate(['bower.json', { bowerrc: '.bowerrc' }]);
       }
     }
   }

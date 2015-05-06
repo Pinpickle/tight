@@ -1,5 +1,4 @@
 'use strict';
-var yeoman = require('yeoman-generator');
 var chalk = require('chalk');
 var yosay = require('yosay');
 var slug = require('slug');
@@ -7,16 +6,9 @@ var fs = require('fs');
 var _ = require('lodash');
 var path = require('path');
 var lib = require('../../lib');
+var nunjucks = require('nunjucks');
 
-module.exports = yeoman.generators.Base.extend({
-  constructor: function () {
-    yeoman.generators.Base.apply(this, arguments);
-
-    this.fastTemplate = function (files) {
-      lib.fastTemplate(this, files);
-    };
-  },
-
+module.exports = lib.TightGenerator.extend({
   initializing: function () {
     this.pkg = require('../../package.json');
   },
@@ -129,16 +121,15 @@ module.exports = yeoman.generators.Base.extend({
       var done = this.async();
 
       // Sorry Yeoman, need to get this on the file system
-      fs.writeFileSync(this.destinationPath('composer.json'), this.engine(fs.readFileSync(this.templatePath('composer.json')).toString(), this.props));
+      fs.writeFileSync(this.destinationPath('composer.json'), nunjucks.renderString(fs.readFileSync(this.templatePath('composer.json')).toString(), this.props));
 
       /*var install = this.spawnCommand('composer', ['install']);
-      install.on('close', function () {
+      install.on('close', function () {(*/
         var bolt = this.spawnCommand('composer', ['bolt-update']);
         bolt.on('close', function () {
           done();
         });
-      }.bind(this));*/
-      done();
+      //}.bind(this));
     },
 
     webroot: function () {
@@ -146,37 +137,40 @@ module.exports = yeoman.generators.Base.extend({
 
       // Try to detect webroot
       var directories = fs.readdirSync(this.destinationPath()).filter(function (file)  {
-        return ((!_.contains(['app', 'extensions', 'vendor'], file)) && (fs.statSync(path.join(this.destinationPath(), file)).isDirectory()));
+        return ((!_.contains(['app', 'extensions', 'vendor', 'node_modules'], file)) && (fs.statSync(path.join(this.destinationPath(), file)).isDirectory()));
       }.bind(this));
 
-      if (directories.length === 0) {
+      if (_.contains(directories, 'files')) {
         // Webroot is the same directory
         this.log(chalk.green('Detected: webroot in same folder.'));
         this.props.webroot = '';
         done();
-      } else if (directories.length === 1) {
-        // There was only one extra directory, it must be webroot
-        this.log(chalk.green('Detected: webroot in ' + directories[0] + '.'));
-        this.props.webroot = directories[0];
-        done();
       } else {
-        // More than one extra directory, ask the user
-        this.log(chalk.red('Could not detect your webroot folder. Sorry, could you please enter it again?'));
-        this.prompt([{
-          type: 'input',
-          name: 'webroot',
-          message: 'What is your webroot folder?',
-          default: directories[0]
-        }], function (props) {
-          this.props.webroot = props.webroot;
+        if (directories.length === 1) {
+          // There was only one extra directory, it must be webroot
+          this.log(chalk.green('Detected: webroot in ' + directories[0] + '.'));
+          this.props.webroot = directories[0];
           done();
-        }.bind(this));
+        } else {
+          // More than one extra directory, ask the user
+          this.log(chalk.red('Could not detect your webroot folder. Sorry, could you please enter it again?'));
+          this.prompt([{
+            type: 'input',
+            name: 'webroot',
+            message: 'What is your webroot folder?',
+            default: directories[0]
+          }], function (props) {
+            this.props.webroot = props.webroot;
+            done();
+          }.bind(this));
+        }
       }
     },
 
     subGenerators: function () {
       this.config.set(this.props);
       this.config.save();
+      //this.config.save();
 
       this.composeWith('tight:extension', {
         local: require.resolve('../extension')

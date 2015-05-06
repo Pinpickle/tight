@@ -12,12 +12,12 @@ var sequence = require('run-sequence');
 var path = require('path');
 var del = require('del');
 var env = require('node-env-file');
-<%- if (theme.js === 'browserify') { %>
+{% if theme.js == 'browserify' -%}
 var browserify = require('browserify');
 var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
-<% if (theme.bower) { %>var debowerify = require('debowerify');<% } %>
-<% } %>
+{% if theme.bower %}var debowerify = require('debowerify');{% endif %}
+{% endif %}
 
 var reload = browserSync.reload;
 
@@ -48,7 +48,7 @@ gulp.task('css', ['clean:css'], function() {
       errorHandler: onError
     }))
     .pipe($.less({
-      paths: [<% if (theme.bower) { %>path.join(__dirname, 'src', 'bower')<% } if ((theme.bower) && (theme.npm)) { %>, <% } if (theme.npm) { %>path.join(__dirname, 'node_modules')<% } %>];
+      paths: [{% if theme.bower %}path.join(__dirname, 'src', 'bower'){% elif theme.bower and theme.npm %}, {% endif %}{% if theme.npm %}path.join(__dirname, 'node_modules'){% endif %}];
     }))
     .pipe($.autoprefixer({cascade: false}))
     .pipe($.if(isDist, $.minifyCss()))
@@ -61,23 +61,23 @@ gulp.task('clean:js', function(cb) {
   del(['assets/scripts/**/*.*', '_tmp/scripts/**/*.*'], cb);
 });
 
-<% if (theme.js === 'js') { -%>
+{% if theme.js == 'js' -%}
 var jsIncludes = [
   'src/bower/jquery/dist/jquery.js',
   'src/js/modules/**/*.js',
   'src/js/contexts/**/*.js',
   'src/js/main.js'
 ];
-<%- } %>
+{% endif -%}
 
 gulp.task('js', ['clean:js'], function() {
-  <% if (theme.js === 'js') { %>return gulp.src(jsIncludes)
-    .pipe($.concat('main.js'))<% } else if (theme.js === 'browserify') { -%>
-  return browserify('src/js/main.js')<% if (theme.bower) { %>
-    .transform(debowerify)<% } %>
+  {% if theme.js == 'js' %}return gulp.src(jsIncludes)
+    .pipe($.concat('main.js')){% elif theme.js == 'browserify' %}
+  return browserify('src/js/main.js'){% if theme.bower %}
+    .transform(debowerify){% endif %}
     .bundle()
     .pipe(source('main.js')
-    .pipe(buffer())<% } %>
+    .pipe(buffer()){% endif %}
     .pipe($.if(isDist, $.uglify()))
     .pipe(gulp.dest('_tmp/scripts'));;
 });

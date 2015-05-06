@@ -1,5 +1,5 @@
 {
-  "name": "<%= hyphenName %>",
+  "name": "{{ hyphenName }}",
   "version": "0.0.1",
   "main": "gulpfile.js",
   "directories": {

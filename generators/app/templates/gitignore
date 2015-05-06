@@ -156,4 +156,4 @@ app/config/*_local.yml
 ### <%= name %> ###
 .env
 dist/
-<%= shortName.toLowerCase() %>-deployed/
+{{ lowerShortName }}-deployed/

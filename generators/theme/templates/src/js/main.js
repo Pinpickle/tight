@@ -1,15 +1,16 @@
-<% if (theme.js == 'browserify') { %>var $ = require('jquery');
+{% if theme.js == 'browserify' %}var $ = require('jquery');
 
-<% } %>var <%= shortName %> = {
+{% endif -%}
+var {{ shortName }} = {
   contexts: { }
 };
 
-<%= shortName %>.contexts.common = function common() {
+{{ shortName }}.contexts.common = function common() {
 
 };
 
 (function () {
-  var main = <%= shortName %>;
+  var main = {{ shortName }};
   main.ready = function ready() {
     main.contexts.common();
     var classes = $('body').attr('class').replace(/-([a-z])/g, function (g) { return g[1].toUpperCase(); }).split(/\s+/);
@@ -22,6 +23,6 @@
 
   $(document).ready(main.ready);
 });
-<% if (theme.js == 'browserify') { %>
-module.exports = <%= shortName %>;
-<% } %>
+{% if theme.js == 'browserify' %}
+module.exports = {{ shortName }};
+{% endif %}
