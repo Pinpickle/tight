@@ -198,7 +198,7 @@ module.exports = lib.TightGenerator.extend({
   writing: {
     app: function () {
       this.fastTemplate(['composer-update.sh', 'composer.json', 'gulpfile.js', 'package.json', 'README.md',
-                         { editorconfig: '.editorconfig', env: '.env', gitignore: '.gitignore', htaccess: '.htaccess' }]);
+                         { editorconfig: '.editorconfig', env: '.env', gitignore: '.gitignore', htaccess: path.join(this.props.webroot, '.htaccess'), 'composer-extensions.json': 'extensions/composer.json' }]);
     },
 
     configfiles: function () {
