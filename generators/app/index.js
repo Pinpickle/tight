@@ -6,8 +6,16 @@ var slug = require('slug');
 var fs = require('fs');
 var _ = require('lodash');
 var path = require('path');
+var lib = require('../../lib');
 
 module.exports = yeoman.generators.Base.extend({
+  constructor: function () {
+    yeoman.generators.Base.apply(this, arguments);
+
+    this.fastTemplate = function (files) {
+      lib.fastTemplate(this, files);
+    };
+  },
 
   initializing: function () {
     this.pkg = require('../../package.json');
@@ -108,6 +116,7 @@ module.exports = yeoman.generators.Base.extend({
           .replace(/\s+(.)/g, function (g) { return g[1].toUpperCase(); }), // Camel case
           '-'); //Slugify
         this.props.upperCamelName = this.props.camelName.charAt(0).toUpperCase() + this.props.camelName.slice(1);
+        this.props.lowerShortName = this.props.shortName.toLowerCase();
         this.name = props.name;
 
         done();
@@ -180,30 +189,17 @@ module.exports = yeoman.generators.Base.extend({
   },
 
   writing: {
-    /*app: function () {
-      this.fs.copy(
-        this.templatePath('_package.json'),
-        this.destinationPath('package.json')
-      );
-      this.fs.copy(
-        this.templatePath('_bower.json'),
-        this.destinationPath('bower.json')
-      );
+    app: function () {
+      this.fastTemplate(['composer-update.sh', 'composer.json', 'gulpfile.js', 'package.json', 'README.md',
+                         { editorconfig: '.editorconfig', env: '.env', gitignore: '.gitignore', htaccess: '.htaccess' }]);
     },
 
     projectfiles: function () {
-      this.fs.copy(
-        this.templatePath('editorconfig'),
-        this.destinationPath('.editorconfig')
-      );
-      this.fs.copy(
-        this.templatePath('jshintrc'),
-        this.destinationPath('.jshintrc')
-      );
-    }*/
+
+    }
   },
 
   install: function () {
-    //this.installDependencies();
+    this.npmInstall();
   }
 });

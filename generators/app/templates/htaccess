@@ -1,0 +1,60 @@
+# Set the default handler.
+DirectoryIndex index.php index.html index.htm
+
+# Prevent directory listing
+Options -Indexes
+
+# Make sure MultiViews is disabled if available.
+<IfModule mod_negotiation.c>
+  Options -MultiViews
+</IfModule>
+
+<IfModule mod_rewrite.c>
+  RewriteEngine on
+
+  # Force non-www
+  RewriteCond %{HTTP_HOST} ^www\.
+  RewriteCond %{HTTPS}s ^on(s)|off
+  RewriteCond http%1://%{HTTP_HOST} ^(https?://)(www\.)?(.+)$
+  RewriteRule ^ %1%3%{REQUEST_URI} [R=301,L]
+
+  # Force www
+  # Uncomment this section and comment section above to enable
+  # RewriteCond %{HTTP_HOST} !^$
+  # RewriteCond %{HTTP_HOST} !^www\. [NC]
+  # RewriteCond %{HTTPS}s ^on(s)|
+  # RewriteRule ^ http%1://www.%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+  RewriteCond %{REQUEST_URI}::$1 ^(.*?/)(.*)::\2$
+  RewriteRule ^(.*)$ - [E=BASE:%1]
+  RewriteRule ^(.*)$ - [E=BASEPATH:$1]
+
+  RewriteRule cache/ - [F]
+
+  # Some servers require the RewriteBase to be set. If so, set to the correct folder.
+  # RewriteBase /
+
+  RewriteCond %{ENV:REDIRECT_STATUS} ^$
+  RewriteCond %{ENV:BASEPATH} !^theme/<%= shortName.toLowerCase() %>/assets
+  RewriteCond %{ENV:BASEPATH} !^files
+  RewriteCond %{ENV:BASEPATH} !^bolt-public
+  RewriteCond %{ENV:BASEPATH} !=favicon.ico
+  RewriteRule ^ %{ENV:BASE}index.php [L]
+
+  # If the request isn't for a file, go to index
+  RewriteCond %{ENV:REDIRECT_STATUS} ^$
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{ENV:BASEPATH} !=favicon.ico
+  RewriteRule ^ %{ENV:BASE}index.php [L]
+</IfModule>
+
+
+# set the correct mime type for woff2 font type
+# =============================================
+# if you don't set your own mimetypes or you aren't using
+# HTML5 Boilerplate Server Configs https://github.com/h5bp/server-configs-apache
+# then you can uncomment (delete the hash/pound/octothorpe/number symbol) the section below:
+
+#<IfModule mod_mime.c>
+#  AddType application/font-woff2    woff2
+#</IfModule>
