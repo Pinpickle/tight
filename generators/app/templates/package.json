@@ -15,12 +15,13 @@
     "del": "^1.1.1",
     "gulp": "^3.8.10",
     "gulp-changed": "^1.2.1",
+    "gulp-util": "^3.0.4",
     "gulp-shell": "^0.2.11",
     "gulp-src-ordered-globs": "^1.0.3",
     "gulp-zip": "^2.0.2",
     "node-env-file": "^0.1.4",
     "node-notifier": "^4.0.3",
     "run-sequence": "^1.0.2",
-    "gulp-ftp": "^1.0.1"
+    "vinyl-ftp": "^0.4.1"
   }
 }

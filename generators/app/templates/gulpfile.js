@@ -3,7 +3,7 @@
 'use strict';
 
 var gulp = require('gulp');
-var ftp = require('gulp-ftp');
+var ftp = require('vinyl-ftp');
 var zip = require('gulp-zip');
 var shell = require('gulp-shell');
 var changed = require('gulp-changed');
@@ -12,11 +12,22 @@ var del = require('del');
 var env = require('node-env-file');
 var notifier = require('node-notifier');
 var gulpSrc = require('gulp-src-ordered-globs');
+var gutil = require('gulp-util');
 
 try {
   env(__dirname + '/.env');
 } catch (e) {
   console.error('Could not load .env file');
+}
+
+function createConnection() {
+  return ftp.create({
+    host: process.env.FTPHOST,
+    user: process.env.FTPUSER,
+    pass: process.env.FTPPASS,
+    parallel: 10,
+    log: gutil.log
+  });
 }
 
 var appDeploy = [
@@ -34,8 +45,6 @@ var appDeploy = [
   './bolt-public/**/*',
   './files/index.html',
   './files/.htaccess',
-  './files/staff_photos/',
-  './files/podcasts/',
 
   './extensions/composer.json',
   './extensions/installer.php',
@@ -68,7 +77,7 @@ var themeDeploy = [
   './theme/{{ lowerShortName }}/templates/**/*'
 ];
 
-var themeBase = 'theme/{{ lowerShortName }}/';
+var themeBase = '{% if webroot != '' %}{{ webroot }}/{% endif %}theme/{{ lowerShortName }}/';
 
 gulp.task('bundle:clean', function(cb) {
   del(['./dist/**/*'], cb);
@@ -104,31 +113,25 @@ gulp.task('bundle', function(cb) {
 // gulp bundle
 // first
 gulp.task('deploy:app', function() {
+  var conn = createConnection();
+
   return gulp.src('dist/{{ lowerShortName }}-bundle.zip', {base: './dist'})
-    .pipe(ftp({
-      host: process.env.FTPHOST,
-      user: process.env.FTPUSER,
-      pass: process.env.FTPPASS,
-      remotePath: process.env.FTPDIR
-    }))
+    .pipe(conn.dest(process.env.FTPDIR))
     .on('finish', function() {
-      notifier.notify({title: '<%= name %> Deploy Complete'});
+      notifier.notify({title: '{{ name }} Deploy Complete'});
     });
 });
 
 
 
 gulp.task('deploy:themedeploy', function() {
+  var conn = createConnection();
+
   return gulp.src(themeDeploy, {base: themeBase})
     .pipe(changed('./theme/{{ lowerShortName }}-deployed', {hasChanged: changed.compareSha1Digest}))
-    .pipe(ftp({
-      host: process.env.FTPHOST,
-      user: process.env.FTPUSER,
-      pass: process.env.FTPPASS,
-      remotePath: process.env.FTPDIR + '/' + themeBase
-    }))
+    .pipe(conn.dest(process.env.FTPDIR + '/' + themeBase))
     .on('finish', function() {
-      notifier.notify({title: '<%= name %> Theme Deploy Complete'});
+      notifier.notify({title: '{{ name }} Theme Deploy Complete'});
     });
 });
 
