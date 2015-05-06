@@ -16,10 +16,9 @@ class TwigHelper {
     /**
      * Add all of the Twig functions and filters
      */
-    public function addTwigFunctions() {
-        $this->initializeTwig();
-        $this->twigExtension->addTwigFilter(new \Twig_SimpleFilter('preg_replace', array($this, '_preg_replace')));
-        $this->twigExtension->addTwigFunction(new \Twig_SimpleFunction('asset', array($this, 'gulpRevBust')));
+    public function addTwigFunctions($twigExtension) {
+        $twigExtension->addTwigFilter(new \Twig_SimpleFilter('preg_replace', array($this, '_preg_replace')));
+        $twigExtension->addTwigFunction(new \Twig_SimpleFunction('asset', array($this, 'gulpRevBust')));
     }
 
     /**

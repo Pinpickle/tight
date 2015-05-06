@@ -167,7 +167,7 @@ gulp.task('build', ['clean:build'], function() {
 gulp.task('serve', function() {
   isServing = true;
   browserSync.init({
-    proxy: '',
+    proxy: process.env.DEVELOPMENT_URL,
     open: false,
     ghostMode: {
       clicks: false,

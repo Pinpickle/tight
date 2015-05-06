@@ -15,8 +15,9 @@ class Extension extends BaseExtension {
         $this->loader->addPrefix('Bolt\\Extension\\{{ owner }}\\{{ shortName }}', __DIR__ . '/src');
         $this->loader->register();
 
-        $this->twigHelper = new TwigHelper();
-        $this->twigHelper->addTwigFunctions();
+        $this->initializeTwig();
+        $this->twigHelper = new TwigHelper($this->app, $this);
+        $this->twigHelper->addTwigFunctions($this->twigExtension);
     }
 
     public function getName() {
