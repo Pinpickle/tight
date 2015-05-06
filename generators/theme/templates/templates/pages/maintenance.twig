@@ -1,0 +1,13 @@
+{% extends 'base.twig' %}
+
+{% block bodyclass %}{{ parent() }} page-maintenance{% endblock %}
+{% block title %}Under Maintenance{% endblock %}
+
+{% block page %}
+  <main class="site-main">
+    <div class="wrapper-content">
+      <h1 class="page-heading">{{ block('title') }}</h1>
+      <p>We are currently undergoing some maintenance. We are sorry for any inconvenience this may cause.</p>
+    </div>
+  </main>
+{% endblock %}
