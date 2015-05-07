@@ -91,24 +91,24 @@ button {
   }
 }
 
-.button-override(@colour, @secondary) {
-  border-color: @colour;
-  color: @colour;
+.button-override(@color, @secondary) {
+  border-color: @color;
+  color: @color;
 
   &:hover {
     color: @secondary;
-    background-color: @colour;
-    border-color: @colour;
+    background-color: @color;
+    border-color: @color;
   }
 
   &:active {
-    border-color: darken(@colour, 10%);
-    background-color: darken(@colour, 10%);
+    border-color: darken(@color, 10%);
+    background-color: darken(@color, 10%);
     color: @secondary;
   }
 
   &:focus {
-    box-shadow: 0 0 0 2px @colour;
+    box-shadow: 0 0 0 2px @color;
   }
 }
 
