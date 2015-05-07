@@ -19,6 +19,8 @@ After that, you're ready to go! Make the directory you want to put the site in, 
     mkdir my-awesome-website
     cd my-awesome-website
     yo tight
+    
+You'll be asked some questions and your site generated. Useful README.md documents will be placed in their relevant locations, so read up on those.
 
 ## Bolt
 
