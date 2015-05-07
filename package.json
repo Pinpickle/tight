@@ -1,6 +1,6 @@
 {
   "name": "generator-tight",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Bolt boilerplate generator",
   "license": "MIT",
   "main": "app/index.js",
