@@ -52,7 +52,7 @@ You'll end up with a `dist` folder, and inside it will be the optimised applicat
 
 Following this, the file will need to be unzipped on the server side. If you're using a host with cPanel, its file manager usually has an unzip function. If you don't have access to it, you can very quickly upload the following script as `unzip.php`, and then execute it.
 
-    <?php system('unzip -o {{ lowerShortName }}-bundle.zip')
+    <?php system('unzip -o {{ lowerShortName }}-bundle.zip');
 
 Make sure to delete this afterwards! The zip file will be hidden by your htaccess file, but it's best to delete that off the server as well.
 

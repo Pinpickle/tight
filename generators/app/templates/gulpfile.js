@@ -21,6 +21,11 @@ try {
 }
 
 function createConnection() {
+  if (!process.env.FTPHOST) {
+    console.log('You have not entered your FTP credentials. Please do so in the .env file');
+    process.exit();
+  }
+
   return ftp.create({
     host: process.env.FTPHOST,
     user: process.env.FTPUSER,
