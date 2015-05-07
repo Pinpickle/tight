@@ -1,8 +1,4 @@
 {% spaceless %}
-{% set prices = app.config.get('general/school_prices') %}
-{% set config = {
-  prices: prices
-} %}
 {% if bodyclasses is not defined %}{% set bodyclasses = [] %}{% endif %}
 {% if title is not defined %}
   {% set title = record.title|striptags %}
