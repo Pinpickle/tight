@@ -8,11 +8,11 @@ Tighten that Bolt! This generator will set up [Bolt](http://bolt.cm) for you wit
 
 You're going to need to have the command line version of [Composer](http://getcomposer.org) installed (so no `php composer.phar` business), and [Node.js/npm](http://nodejs.org). This uses [Yeoman](http://yeoman.io/) and [Gulp](http://gulpjs.com) (and potentially [Bower](http://bower.io)), so you're going to want to have those installed.
 
-    npm install yo gulp bower -g
+    npm -g install yo gulp bower
 
 Then you're going to want to install this here generator
 
-    npm install generator-tight
+    npm -g install generator-tight
 
 After that, you're ready to go! Make the directory you want to put the site in, `cd` into it, and then run the generator
 
