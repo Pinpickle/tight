@@ -39,6 +39,7 @@ Options -Indexes
   RewriteCond %{ENV:BASEPATH} !^files
   RewriteCond %{ENV:BASEPATH} !^bolt-public
   RewriteCond %{ENV:BASEPATH} !=favicon.ico
+  RewriteCond %{ENV:BASEPATH} !^[^\/]+\.(?:php|html|txt)
   RewriteRule ^ %{ENV:BASE}index.php [L]
 
   # If the request isn't for a file, go to index
