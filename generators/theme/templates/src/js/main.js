@@ -1,3 +1,4 @@
+'use strict';
 {% if theme.js == 'browserify' %}var $ = require('jquery');
 
 {% endif -%}
@@ -19,10 +20,10 @@ var {{ shortName }} = {
         main.contexts[item]();
       }
     });
-  }
+  };
 
   $(document).ready(main.ready);
-});
+})();
 {% if theme.js == 'browserify' %}
 module.exports = {{ shortName }};
 {% endif %}

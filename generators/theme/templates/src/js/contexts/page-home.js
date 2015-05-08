@@ -1,3 +1,4 @@
+'use strict';
 {% if theme.js == 'browserify' %}var $ = require('jquery');
 var {{ shortName }} = require('../main.js');
 
