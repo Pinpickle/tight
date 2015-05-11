@@ -77,7 +77,7 @@ var jsIncludes = [
   'src/bower/jquery/dist/jquery.js',
   'src/js/modules/**/*.js',
   'src/js/contexts/**/*.js',
-  'src/js/main.js'
+  'src/js/{{ shortName.toLowerCase() }}.js'
 ];
 {% endif -%}
 
