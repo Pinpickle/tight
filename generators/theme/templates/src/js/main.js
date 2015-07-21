@@ -1,3 +1,3 @@
 'use strict';
-var {{ shortName }} = require('{{ shortName.toLowerCase() }}');
+var {{ shortName }} = require('./{{ shortName.toLowerCase() }}');
 {{ shortName }}.run();

@@ -14,6 +14,7 @@ var del = require('del');
 var env = require('node-env-file');
 {% if theme.js == 'browserify' -%}
 var browserify = require('browserify');
+var bulkify = require('bulkify');
 var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
 {% if theme.bower %}var debowerify = require('debowerify');{% endif %}
@@ -87,6 +88,7 @@ gulp.task('js', ['clean:js'], function() {
     .pipe($.concat('main.js'))
   {%- elif theme.js == 'browserify' -%}
   return browserify('./src/js/main.js')
+    .transform(bulkify)
   {% if theme.bower -%}
     .transform(debowerify)
   {% endif -%}
