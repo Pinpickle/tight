@@ -4,7 +4,7 @@
     "license": "{{ license }}",
 
     "require": {
-        "bolt/bolt": "~2.1",
+        "bolt/bolt": "~2.2",
         "composer/composer": "1.0.*@dev",
         "ircmaxell/random-lib": "dev-master",
         "symfony/class-loader": "~2.7@beta"
@@ -20,7 +20,10 @@
 
     "scripts": {
         "bolt-update": [
-            "Bolt\\Composer\\ScriptHandler::bootstrap"
+            "Bolt\\Composer\\ScriptHandler::installAssets"
+        ],
+        "post-update-cmd": [
+            "Bolt\\Composer\\ScriptHandler::installAssets"
         ]
     },
     "extra": {
