@@ -120,15 +120,16 @@ gulp.task('clean:rev', function(cb) {
 gulp.task('rev', ['clean:rev'], function() {
   var rev = new $.revAll();
   var src = gulp.src('_tmp/**/*.*');
+  
   if (isDist) {
-    src.pipe( rev.revision() )
-      .pipe( gulp.dest('assets') )
-      .pipe( rev.manifestFile() )
-      .pipe( gulp.dest('') );
+    src.pipe(rev.revision())
+      .pipe(gulp.dest('assets'))
+      .pipe(rev.manifestFile())
+      .pipe(gulp.dest(''));
   } else {
-    src.pipe( $.changed('assets', { hasChanged: $.changed.compareSha1Digest }) )
-      .pipe( gulp.dest('assets') )
-      .pipe( reload({ stream: true }) );
+    src.pipe($.changed('assets', { hasChanged: $.changed.compareSha1Digest }))
+      .pipe(gulp.dest('assets'))
+      .pipe(reload({ stream: true }));
   }
 
   return src;
