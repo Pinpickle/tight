@@ -126,7 +126,7 @@ gulp.task('rev', ['clean:rev'], function() {
       .pipe( rev.manifestFile() )
       .pipe( gulp.dest('') );
   } else {
-    src.pipe( $.changed('assets') )
+    src.pipe( $.changed('assets', { hasChanged: $.changed.compareSha1Digest }) )
       .pipe( gulp.dest('assets') )
       .pipe( reload({ stream: true }) );
   }
