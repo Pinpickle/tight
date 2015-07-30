@@ -1,12 +1,12 @@
 {
-  "name": "<%= shortName.toLowerCase() %>-theme",
+  "name": "{{ shortName.toLowerCase() }}-theme",
   "version": "0.0.1",
   "keywords": [
     "twig",
     "theme",
     "bolt"
   ],
-  "license": "<%= license %>",
+  "license": "{{ license }}",
   "ignore": [
     "**/.*",
     "node_modules",
