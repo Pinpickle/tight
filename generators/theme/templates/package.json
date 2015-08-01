@@ -26,6 +26,7 @@
     "gulp-rename": "^1.2.2",
     "gulp-replace": "^0.5.2",
     "gulp-rev-all": "^0.8.18",
+    "gulp-sourcemaps": "^1.5.2",
     "gulp-svgmin": "^1.1.1",
     "gulp-uglify": "^1.0.2",
     "gulp-util": "^3.0.1",

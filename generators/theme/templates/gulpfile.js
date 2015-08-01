@@ -46,21 +46,25 @@ gulp.task('clean:css', function(cb) {
 gulp.task('css', ['clean:css'], function() {
   {% if theme.css == 'less' -%}
   return gulp.src(['src/less/main.less'], {base: path.join(__dirname, 'src/less')})
+  {%- elif theme.css == 'css' -%}
+  return gulp.src(['src/css/main.css'], { base: path.join(__dirname, 'src/css') })
+  {%- elif theme.css == 'sass' -%}
+  return gulp.src('nope')
+  {%- endif %}
     .pipe($.plumber({
       errorHandler: onError
     }))
+    .pipe($.if(!isDist, $.sourcemaps.init()))
+  {%- if theme.css == 'less' %}
     .pipe($.less({
       paths: [{% if theme.bower %}path.join(__dirname, 'src', 'bower'){% if theme.npm %}, {% endif %}{% endif %}{% if theme.npm %}path.join(__dirname, 'node_modules'){% endif %}]
     }))
-  {%- elif theme.css == 'css' -%}
-  return gulp.src(['src/css/main.css'], { base: path.join(__dirname, 'src/css') })
+  {%- elif theme.css == 'css' %}
     .pipe($.cssnext({
       import: {
         path: [{% if theme.bower %}path.join(__dirname, 'src', 'bower'){% if theme.npm %}, {% endif %}{% endif %}{% if theme.npm %}path.join(__dirname, 'node_modules'){% endif %}]
       }
     }))
-  {%- elif theme.css == 'sass' -%}
-  return nope;
   {%- endif %}
     .pipe($.autoprefixer({cascade: false}))
     .pipe($.if(isDist, $.minifyCss()))
@@ -82,21 +86,34 @@ var jsIncludes = [
 ];
 {% endif -%}
 
+{%- if theme.js == 'browserify' %}
+function gulpBrowserify(fileIn, fileOut) {
+  return browserify({
+      entries: fileIn,
+      debug: !isDist
+    })
+    .transform(bulkify)
+    {% if theme.bower -%}
+    .transform(debowerify)
+    {% endif -%}
+    .bundle()
+    .on('error', onError)
+    .pipe(source(fileOut))
+    .pipe(buffer())
+}
+{% endif -%}
+
 gulp.task('js', ['clean:js'], function() {
   {% if theme.js == 'js' -%}
   return gulp.src(jsIncludes)
+    .pipe($.if(!isDist, $.sourcemaps.init()))
     .pipe($.concat('main.js'))
   {%- elif theme.js == 'browserify' -%}
-  return browserify('./src/js/main.js')
-    .transform(bulkify)
-  {% if theme.bower -%}
-    .transform(debowerify)
-  {% endif -%}
-    .bundle()
-    .pipe(source('main.js'))
-    .pipe(buffer())
+  return gulpBrowserify('./src/js/main.js', 'main.js')
+    .pipe($.if(!isDist, $.sourcemaps.init({ loadMaps: true})))
   {%- endif -%}
     .pipe($.if(isDist, $.uglify()))
+    .pipe($.if(!isDist, $.sourcemaps.write()))
     .pipe(gulp.dest('_tmp/scripts'));
 });
 
@@ -120,7 +137,7 @@ gulp.task('clean:rev', function(cb) {
 gulp.task('rev', ['clean:rev'], function() {
   var rev = new $.revAll();
   var src = gulp.src('_tmp/**/*.*');
-  
+
   if (isDist) {
     src.pipe(rev.revision())
       .pipe(gulp.dest('assets'))
