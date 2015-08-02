@@ -27,6 +27,18 @@ This will activate file system watching, and [BrowserSync](http://browsersync.io
 
 **Important:** To be able to use this, you'll have to go through BrowserSync's proxy. When you run `gulp`, you'll be given a site URL (e.g. `http://localhost:3000`) that you can enter in order to access it. The Bolt backend, however, currently has some issues with that proxy so if you're accessing Bolt, make sure to not use the proxy (so get rid of the `:3000`).
 
+### Modernizr
+
+There is a custom Modernizr build being made that is optimised for your site (only testing for what it needs to). This is fairly expensive, so running it on every css and js build will slow you down. While in the watching state, pressing `m` on your keyboard will rebuild Modernizr. Just run this whenever you add a test in your styles or scripts. For example:
+
+```css
+.no-js .great-container {
+  content: 'There is no JS!';
+}
+
+/** Press m and it will add the JS test to Modernizr build **/
+```
+
 ## Other tasks
 
 This comes with individual tasks for building your assets:

@@ -14,13 +14,13 @@ var del = require('del');
 var env = require('node-env-file');
 {% if theme.js == 'browserify' -%}
 var browserify = require('browserify');
+var reload = browserSync.reload;
 var bulkify = require('bulkify');
 var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
 {% if theme.bower %}var debowerify = require('debowerify');{% endif %}
 {% endif %}
-
-var reload = browserSync.reload;
+var keypress = require('keypress');
 
 var isDist = argv.dist;
 var isServing = false;
@@ -74,7 +74,7 @@ gulp.task('css', ['clean:css'], function() {
 
 // Compile scripts into a single js file
 gulp.task('clean:js', function(cb) {
-  del(['assets/scripts/**/*.*', '_tmp/scripts/**/*.*'], cb);
+  del(['assets/scripts/**/*.*', '_tmp/scripts/**/*.*', '!_tmp/scripts/modernizr.js'], cb);
 });
 
 {% if theme.js == 'js' -%}
@@ -117,6 +117,16 @@ gulp.task('js', ['clean:js'], function() {
     .pipe(gulp.dest('_tmp/scripts'));
 });
 
+// Modernizr build
+gulp.task('clean:modernizr', function (cb) {
+  del(['_tmp/scripts/modernizr.js'], cb)
+});
+
+gulp.task('modernizr', ['clean:modernizr'], function () {
+  return gulp.src(['_tmp/scripts/*.js', '_tmp/styles/*.css'])
+    .pipe($.modernizr())
+    .pipe(gulp.dest('_tmp/scripts'))
+});
 
 // Move images over
 gulp.task('clean:img', function(cb) {
@@ -167,6 +177,24 @@ gulp.task('watch', ['build'], function() {
   gulp.watch('templates/**/*', function() {
     sequence('rev', reload);
   });
+
+  // Keypress logic
+  keypress(process.stdin);
+
+  process.stdin.on('keypress', function (ch, key) {
+    // Ctrl+C means close
+    if (key && key.ctrl && key.name == 'c') {
+      process.exit();
+    }
+
+    // Modernizr rebuild
+    if (key.name == 'm') {
+      sequence('modernizr', 'rev');
+    }
+  });
+
+  process.stdin.setRawMode(true);
+  process.stdin.resume();
 });
 
 gulp.task('htaccess', function() {
@@ -181,7 +209,7 @@ gulp.task('clean:build', function(cb) {
 });
 
 gulp.task('build', ['clean:build'], function() {
-    sequence(['htaccess', 'js', 'css', 'img'], 'rev');
+    sequence(['htaccess', 'js', 'css', 'img'], 'modernizr', 'rev');
 });
 
 gulp.task('serve', function() {

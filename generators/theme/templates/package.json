@@ -30,7 +30,8 @@
     "gulp-svgmin": "^1.1.1",
     "gulp-uglify": "^1.0.2",
     "gulp-util": "^3.0.1",
-    {% if theme.npm %}"jquery": "~1",{% endif -%}
+    "keypress": "^0.2.1",
+    {% if theme.npm %}"jquery": "~1",{% endif %}
     "merge-stream": "^0.1.7",
     "node-env-file": "^0.1.4",
     "run-sequence": "^1.0.2",
