@@ -6,8 +6,7 @@
     "require": {
         "bolt/bolt": "~2.2",
         "composer/composer": "1.0.*@dev",
-        "ircmaxell/random-lib": "dev-master",
-        "symfony/class-loader": "~2.7@beta"
+        "ircmaxell/random-lib": "dev-master"
     },
     "authors": [
         {
@@ -26,11 +25,14 @@
             "Bolt\\Composer\\ScriptHandler::installAssets"
         ]
     },
+    "autoload": {
+      "psr-4": { "{{ owner }}\\{{ shortName }}\\": "src/" }
+    },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.1-dev"
+            "dev-master": "2.2-dev"
         },
-        "bolt-web-dir": "./",
+        "bolt-web-dir": "{% if webroot == '' %}./{% else %}{{ webroot }}{% endif %}",
         "bolt-app-dir": "./app"
     }
 }

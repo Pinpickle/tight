@@ -7,6 +7,7 @@ var _ = require('lodash');
 var path = require('path');
 var lib = require('../../lib');
 var nunjucks = require('nunjucks');
+var glob = require('glob');
 
 module.exports = lib.TightGenerator.extend({
   constructor: function () {
@@ -122,72 +123,36 @@ module.exports = lib.TightGenerator.extend({
       }.bind(this));
     },
 
-    composer: function () {
-      this.log(chalk.red('Running Composer now. Make sure you have it installed!'));
+    site: function () {
+      this.log(chalk.green('We\'re going to ask whether you want a public web directory inside your root. Leave it blank to use your root as your web directory.'));
 
       var done = this.async();
 
-      // Sorry Yeoman, need to get this on the file system
-      fs.writeFileSync(this.destinationPath('composer.json'), nunjucks.renderString(fs.readFileSync(this.templatePath('composer.json')).toString(), this.props));
-
-
-      var installBolt = function () {
-        var bolt = this.spawnCommand('composer', ['bolt-update']);
-        bolt.on('close', function () {
-          done();
-        });
-      }.bind(this);
-
-      if (this.options.dontCompose) {
-        installBolt();
-      } else {
-        var install = this.spawnCommand('composer', ['install']);
-        install.on('close', installBolt);
-      }
-    },
-
-    webroot: function () {
-      var done = this.async();
-
-      // Try to detect webroot
-      var directories = fs.readdirSync(this.destinationPath()).filter(function (file)  {
-        return ((!_.contains(['app', 'extensions', 'vendor', 'node_modules'], file)) && (fs.statSync(path.join(this.destinationPath(), file)).isDirectory()));
-      }.bind(this));
-
-      if (_.contains(directories, 'files')) {
-        // Webroot is the same directory
-        this.log(chalk.green('Detected: webroot in same folder.'));
-        this.props.webroot = '';
-        done();
-      } else {
-        if (directories.length === 1) {
-          // There was only one extra directory, it must be webroot
-          this.log(chalk.green('Detected: webroot in ' + directories[0] + '.'));
-          this.props.webroot = directories[0];
-          done();
-        } else {
-          // More than one extra directory, ask the user
-          this.log(chalk.red('Could not detect your webroot folder. Sorry, could you please enter it again?'));
-          this.prompt([{
-            type: 'input',
-            name: 'webroot',
-            message: 'What is your webroot folder?',
-            default: directories[0]
-          }], function (props) {
-            this.props.webroot = props.webroot;
-            done();
-          }.bind(this));
+      var prompts = [
+        {
+          type: 'input',
+          name: 'webroot',
+          message: 'Where do you want your webroot to be?',
+          default: ''
         }
-      }
+      ]
+
+      this.prompt(prompts, function (props) {
+        var root  = props.webroot;
+
+        if ((root == '.') || (root == './')) {
+          root = '';
+        }
+
+        this.props.webroot = root;
+
+        done();
+      }.bind(this));
     },
 
     subGenerators: function () {
       this.config.set(this.props);
       this.config.save();
-
-      this.composeWith('tight:extension', {
-        local: require.resolve('../extension')
-      });
 
       this.composeWith('tight:theme', {
         local: require.resolve('../theme')
@@ -197,8 +162,16 @@ module.exports = lib.TightGenerator.extend({
 
   writing: {
     app: function () {
-      this.fastTemplate(['composer-update.sh', 'composer.json', 'gulpfile.js', 'package.json', 'README.md', 'favicon.ico',
-                         { editorconfig: '.editorconfig', env: '.env', gitignore: '.gitignore', htaccess: path.join(this.props.webroot, '.htaccess'), 'composer-extensions.json': 'extensions/composer.json' }]);
+      this.fastTemplate([
+        'composer.json', 'gulpfile.js', 'package.json', 'README.md', 'favicon.ico', 'src/Extension.php', 'src/TwigHelper.php',
+        {
+          editorconfig: '.editorconfig',
+          env: '.env',
+          gitignore: '.gitignore',
+          htaccess: path.join(this.props.webroot, '.htaccess'),
+          'index.php': path.join(this.props.webroot, 'index.php')
+        }
+      ]);
     },
 
     configfiles: function () {
@@ -213,9 +186,76 @@ module.exports = lib.TightGenerator.extend({
   },
 
   install: function () {
-    this.npmInstall();
-    this.spawnCommand('composer', ['install'], {
-      cwd: path.join(this.destinationRoot(), 'extensions')
-    });
+    var done = this.async();
+    var themePath = path.join(this.destinationRoot(), 'theme');
+
+    this.log(chalk.green('Running npm install'));
+    this.command('npm', ['install'], {
+      cwd: this.destinationRoot()
+    }).then(function () {
+      this.log(chalk.green('Running composer install'));
+      return this.command('composer', ['install'], {
+        cwd: this.destinationRoot()
+      });
+    }.bind(this)).then(function () {
+      this.log(chalk.green('Updating Bolt assets'));
+      return this.command('composer', ['bolt-update'], {
+        cwd: this.destinationRoot()
+      });
+    }.bind(this)).then(function () {
+      this.log(chalk.green('Installing Bolt extensions'));
+      return this.command('php', ['vendor/bin/nut', 'extensions:install', 'bolt/sitemap', '*.*.*'], {
+        cwd: this.destinationRoot()
+      });
+    }.bind(this)).then(function () {
+      this.log(chalk.green('Running npm install for theme'));
+      return this.command('npm', ['install'], {
+        cwd: themePath
+      });
+    }.bind(this)).then(function () {
+      this.log(chalk.green('Building your theme'));
+      return this.command('gulp', ['build'], {
+        cwd: this.destinationRoot()
+      });
+    }.bind(this)).then(function () {
+      this.log(chalk.green('Fixing file permissions'));
+      var ignore = ['**/node_modules/**', '**/vendor/**'];
+
+      return Promise.all([
+        // Set directories to 775
+        new Promise(function(resolve, reject) {
+          glob('**/', {
+            cwd: this.destinationPath(),
+            ignore: ignore
+          }, function () {
+            resolve();
+          }).on('match', function (m) {
+            try {
+              fs.chmodSync(m, '775')
+            } catch (e) {
+              // Swallowing
+            }
+          });
+        }.bind(this)),
+        // Set files to 664
+        new Promise(function(resolve, reject) {
+          glob('**', {
+            cwd: this.destinationPath(),
+            ignore: ignore,
+            nodir: true
+          }, function () {
+            resolve();
+          }).on('match', function (m) {
+            try {
+              fs.chmodSync(m, '664')
+            } catch (e) {
+              // Swallowing
+            }
+          });
+        }.bind(this))
+      ]);
+    }.bind(this)).then(function () {
+      done();
+    }).done();
   }
 });

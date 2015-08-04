@@ -5,7 +5,6 @@
 var gulp = require('gulp');
 var ftp = require('vinyl-ftp');
 var zip = require('gulp-zip');
-var shell = require('gulp-shell');
 var changed = require('gulp-changed');
 var sequence = require('run-sequence');
 var del = require('del');
@@ -13,12 +12,23 @@ var env = require('node-env-file');
 var notifier = require('node-notifier');
 var gulpSrc = require('gulp-src-ordered-globs');
 var gutil = require('gulp-util');
+var path = require('path');
+var exec = require('child_process').execSync;
+
+var composer = require('./composer.json');
+var webDir = path.join('./', composer.extra['bolt-web-dir'] || './');
 
 try {
   env(__dirname + '/.env');
 } catch (e) {
   console.error('Could not load .env file');
 }
+
+function webPath(dir) {
+  return path.join(webDir, dir);
+}
+
+require('./theme/gulp');
 
 function createConnection() {
   if (!process.env.FTPHOST) {
@@ -36,10 +46,10 @@ function createConnection() {
 }
 
 var appDeploy = [
-  '.htaccess',
-  './*.png',
-  './*.ico',
-  './composer.json',
+  webPath('.htaccess'),
+  webPath('./*.png'),
+  webPath('./*.ico'),
+  './composer.*',
 
   './app/**/*',
   '!./app/config/*_local.yml',
@@ -47,15 +57,15 @@ var appDeploy = [
   '!./app/cache/**/*',
   './app/cache/index.html',
 
-  './bolt-public/**/*',
-  './files/index.html',
-  './files/.htaccess',
+  webPath('./bolt-public/**/*'),
+  webPath('./files/index.html'),
+  webPath('./files/.htaccess'),
 
-  './extensions/composer.json',
-  './extensions/installer.php',
+  './extensions/composer.*',
+  './extensions/ExtensionInstaller.php',
   './extensions/local/**/*',
 
-  './index.php'
+  webPath('./index.php')
 ];
 
 var cleanup = [
@@ -74,14 +84,13 @@ var cleanup = [
   './dist/vendor/swiftmailer/swiftmailer/notes/**/*'
 ];
 
-var themeBase = './{% if webroot != '' %}{{ webroot }}/{% endif %}theme/{{ lowerShortName }}/';
-
 var themeDeploy = [
-  themeBase + 'config.yml',
-  themeBase + 'rev-manifest.json',
-  themeBase + 'assets/.htaccess',
-  themeBase + 'assets/**/*',
-  themeBase + 'templates/**/*'
+  'theme/config.yml',
+  'theme/rev-manifest.json',
+  'theme/templates/**/*',
+
+  webPath('theme-assets/.htaccess'),
+  webPath('theme-assets/**/*')
 ];
 
 gulp.task('bundle:clean', function(cb) {
@@ -98,7 +107,13 @@ gulp.task('bundle:theme', function() {
     .pipe(gulp.dest('dist'));
 });
 
-gulp.task('bundle:update', shell.task(['./composer-update.sh']));
+gulp.task('bundle:update', function () {
+  var cmdString = 'composer update --no-dev --optimize-autoloader --prefer-dist';
+  exec(cmdString, { cwd: './dist', stdio: 'inherit' });
+  exec('composer bolt-update', { cwd: './dist', stdio: 'inherit' });
+  exec(cmdString, { cwd: './dist/extensions', stdio: 'inherit' });
+  cb();
+});
 
 gulp.task('bundle:cleanup', function(cb) {
   del(cleanup, cb);
@@ -106,7 +121,7 @@ gulp.task('bundle:cleanup', function(cb) {
 
 gulp.task('bundle:zip', function() {
   return gulp.src(['./dist/**/*', './dist/**/.htaccess'], {base: './dist'})
-    .pipe(zip('{{ lowerShortName }}-bundle.zip'))
+    .pipe(zip('site-bundle.zip'))
     .pipe(gulp.dest('dist'));
 });
 
@@ -120,7 +135,7 @@ gulp.task('bundle', function(cb) {
 gulp.task('deploy:app', function() {
   var conn = createConnection();
 
-  return gulp.src('dist/{{ lowerShortName }}-bundle.zip', {base: './dist'})
+  return gulp.src('dist/site-bundle.zip', {base: './dist'})
     .pipe(conn.dest(process.env.FTPDIR))
     .on('finish', function() {
       notifier.notify({title: '{{ name }} Deploy Complete'});
@@ -133,7 +148,7 @@ gulp.task('deploy:themedeploy', function() {
   var conn = createConnection();
 
   return gulp.src(themeDeploy, {base: themeBase})
-    .pipe(changed('./{% if webroot != '' %}{{ webroot }}/{% endif %}theme/{{ lowerShortName }}-deployed', {hasChanged: changed.compareSha1Digest}))
+    .pipe(changed('./_theme-deployed', {hasChanged: changed.compareSha1Digest}))
     .pipe(conn.dest(process.env.FTPDIR + '/' + themeBase))
     .on('finish', function() {
       notifier.notify({title: '{{ name }} Theme Deploy Complete'});
@@ -141,12 +156,10 @@ gulp.task('deploy:themedeploy', function() {
 });
 
 gulp.task('deploy:themeclean', ['deploy:themedeploy'], function(cb) {
-  del(['{{ lowerShortName }}-deployed/**/*'], cb);
+  del(['_theme-deployed/**/*'], cb);
 });
 
 gulp.task('deploy:theme', ['deploy:themeclean'], function() {
   return gulp.src(themeDeploy, {base: themeBase})
-    .pipe(gulp.dest('theme/{{ lowerShortName }}-deployed'));
+    .pipe(gulp.dest('./_theme-deployed'));
 });
-
-

@@ -149,11 +149,12 @@ extensions/vendor
 app/database/*
 thumbs/
 files/
-# If you want to ignore bolt's static assets, uncomment line below
-# bolt-public/
+# If you want to commit bolt's static assets, comment line below
+bolt-public/
 app/config/*_local.yml
 
-### <%= name %> ###
+### {{ name }} ###
 .env
 dist/
-{{ lowerShortName }}-deployed/
+theme-deployed/
+theme-assets/

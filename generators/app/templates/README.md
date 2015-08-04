@@ -12,11 +12,20 @@ Make sure that you have [Node.js](https://nodejs.org/) and [Composer](https://ge
 
 ## Theme
 
-You'll need to build the theme as well. Head over to the theme directory in {% if webroot != '' %}{{ webroot }}/{% endif %}theme/{{ lowerShortName }} and read the readme over there to figure out how to do that.
+You'll need to build the theme as well. Head over to the theme directory in `theme` and read the readme over there to figure out how to do that.
 
 ## Extensions
 
-This comes bundled with a custom extension. Navigate to extensions/local/{{ owner }}/{{ lowerShortName }} to figure out how it works. 
+Bolt extensions are usually third party, but having your own local one is a great place to put all of your custom PHP code. You'll probably need it at some point but the theme actually depends on it. The source code is in the `src` directory, and you can add files as you please.
+
+Out of the box, you get two functions from this extension:
+
+1. Skip all of that boilerplate required to write your own extension.
+2. Provide two useful Twig filters/functions for your templates:
+ - An `asset` function that allows you to link to assets in your theme easily, and also links to revved versions of file names
+ - A `preg_replace` filter that allows you to use the standard PHP function in Twig.
+
+All of the Twig code is in `src/TwigHelper.php`. For adding any other code, you'd want to start with `src/Extension.php` and take it from there.
 
 ## Setting Up Bolt
 

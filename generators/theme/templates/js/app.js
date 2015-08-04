@@ -1,5 +1,5 @@
-'use strict';
-{% if theme.js == 'browserify' %}var $ = require('jquery');
+{% if theme.js == 'browserify' %}'use strict';
+var $ = require('jquery');
 var bulk = require('bulk-require')
 
 {% endif -%}
@@ -29,6 +29,4 @@ var {{ shortName }} = {
 module.exports = {{ shortName }};
 
 bulk(__dirname, './contexts/*.js');
-{% else %}
-{{ shortName }}.run();
 {% endif %}

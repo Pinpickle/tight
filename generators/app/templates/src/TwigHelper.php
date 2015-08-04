@@ -1,9 +1,8 @@
 <?php
 
-namespace Bolt\Extension\{{ owner }}\{{ shortName }};
+namespace {{ owner }}\{{ shortName }};
 
 class TwigHelper {
-
     protected $manifest;
     protected $app;
     protected $extension;
@@ -56,7 +55,7 @@ class TwigHelper {
 
         $fileName = $this->getManifestFileName();
         if (!file_exists($fileName)) {
-            return $prefix . 'assets/' . $accessorName;
+            return $prefix . $accessorName;
         }
 
         if (!isset($this->manifest)) {
@@ -65,7 +64,7 @@ class TwigHelper {
 
         $options = $this->manifest;
 
-        return $prefix . 'assets/' . (isset($options[$accessorName]) ? $options[$accessorName] : $accessorName);
+        return $prefix . (isset($options[$accessorName]) ? $options[$accessorName] : $accessorName);
     }
 
     /**
