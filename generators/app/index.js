@@ -163,13 +163,14 @@ module.exports = lib.TightGenerator.extend({
   writing: {
     app: function () {
       this.fastTemplate([
-        'composer.json', 'gulpfile.js', 'package.json', 'README.md', 'favicon.ico', 'src/Extension.php', 'src/TwigHelper.php',
+        'composer.json', 'gulpfile.js', 'package.json', 'README.md', 'src/Extension.php', 'src/TwigHelper.php',
         {
           editorconfig: '.editorconfig',
           env: '.env',
           gitignore: '.gitignore',
           htaccess: path.join(this.props.webroot, '.htaccess'),
-          'index.php': path.join(this.props.webroot, 'index.php')
+          'index.php': path.join(this.props.webroot, 'index.php'),
+          'favicon.ico': path.join(this.props.webroot, 'favicon.ico')
         }
       ]);
     },

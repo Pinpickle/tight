@@ -15,6 +15,7 @@ description: Insert a great description
 # name here accordingly. Don't edit the templates in theme/base-2014, because
 # they _will_ get updated in next releases
 theme: theme
+theme_path: './'
 
 # The locale that'll be used by the application. If no locale is set the
 # fallback locale is 'en_GB'. For available options, see: http://docs.bolt.cm/locales

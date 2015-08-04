@@ -164,12 +164,12 @@ gulp.task('rev', ['clean:rev'], function() {
 
   if (isDist) {
     src.pipe(rev.revision())
-      .pipe(gulp.dest('theme-assets'))
+      .pipe(gulp.dest(assetsDir))
       .pipe(rev.manifestFile())
       .pipe(gulp.dest('theme'));
   } else {
-    src.pipe($.changed('theme-assets', { hasChanged: $.changed.compareSha1Digest }))
-      .pipe(gulp.dest('theme-assets'))
+    src.pipe($.changed(assetsDir, { hasChanged: $.changed.compareSha1Digest }))
+      .pipe(gulp.dest(assetsDir))
       .pipe(reload({ stream: true }));
   }
 
@@ -214,7 +214,7 @@ gulp.task('watch', ['build'], function() {
 gulp.task('htaccess', function() {
   gulp.src('theme/htaccess', { base: 'theme' })
     .pipe($.rename('.htaccess'))
-    .pipe($.if(isDist, gulp.dest('theme-assets')));
+    .pipe($.if(isDist, gulp.dest(assetsDir)));
 });
 
 // Just build the thing
