@@ -30,7 +30,8 @@ module.exports = lib.TightGenerator.extend({
         { name: 'Browserify', value: 'browserify' }/*,
         { name: 'RequireJS', value: 'requirejs' }*/
       ],
-      store: true
+      store: true,
+      default: 'browserify'
     }, {
       type: 'list',
       name: 'css',
@@ -41,7 +42,8 @@ module.exports = lib.TightGenerator.extend({
         { name: 'SASS', value: 'sass' },
         { name: 'Stylus', value: 'stylus'}*/
       ],
-      store: true
+      store: true,
+      default: 'less'
     }, {
       type: 'list',
       name: 'package',
@@ -51,7 +53,8 @@ module.exports = lib.TightGenerator.extend({
         { name: 'npm', value: 'npm' },
         { name: 'Both', value: 'both' }
       ],
-      store: true
+      store: true,
+      default: 'npm'
     }];
 
     this.prompt(prompts, function (props) {

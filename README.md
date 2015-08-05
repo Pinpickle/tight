@@ -19,7 +19,7 @@ After that, you're ready to go! Make the directory you want to put the site in, 
     mkdir my-awesome-website
     cd my-awesome-website
     yo tight
-    
+
 You'll be asked some questions and your site generated. Useful README.md documents will be placed in their relevant locations, so read up on those.
 
 ## Bolt
@@ -49,6 +49,13 @@ When you're ready for production, you can be comfortable knowing that your stati
 ## Extension
 
 This comes with a really simple local extension so you can author any custom PHP code for your website. It has a couple of custom twig functions required for the theme to work, but it also gets rid of all of that boilerplate and comes with its own autoloader!
+
+## Contributing/Tests
+
+Tests are done using [Zombie.js](http://zombie.js.org/) and, as such, require [io.js](https://iojs.org/) as opposed to Node.
+So you'll have to have that installed if you want to run the tests.
+
+    npm test
 
 ## License
 

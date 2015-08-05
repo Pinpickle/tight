@@ -93,12 +93,14 @@ module.exports = lib.TightGenerator.extend({
         type: 'input',
         name: 'username',
         message: 'What is your name?',
-        store: true
+        store: true,
+        default: 'MrTight'
       }, {
         type: 'input',
         name: 'email',
         message: 'What is your email?',
-        store: true
+        store: true,
+        default: 'tight@tight.co'
       }, {
         type: 'input',
         name: 'repository',
@@ -188,6 +190,12 @@ module.exports = lib.TightGenerator.extend({
 
   install: function () {
     var done = this.async();
+
+    if (this.options.skipInstall) {
+      done();
+      return;
+    }
+
     var themePath = path.join(this.destinationRoot(), 'theme');
 
     this.log(chalk.green('Running npm install'));
