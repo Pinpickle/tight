@@ -1,15 +1,10 @@
 sudo: true
 language: node_js
-addons:
-    apt:
-        packages:
-            - php5-common
-            - php5-cli
-            - php5-sqlite
-            - php5-gd
-            - php5-curl
 before_install:
   - npm install gulp -g
+  - sudo apt-add-repository ppa:ondrej/php5-5.6 -y
+  - sudo apt-get update -y
+  - sudo apt-get install php5 php5-sqlite php5-gd php5-curl -y
   - curl -sS https://getcomposer.org/installer | php
   - sudo mv composer.phar /usr/local/bin/composer
 node_js:

@@ -30,7 +30,7 @@ exports.startServer = function startServer(webroot) {
       portfinder.getPort({ host: '127.0.0.1' }, function (err, port) {
         var home = '127.0.0.1:' + port;
         console.log('Listening on ' + home + ' in directory ' + webroot);
-        var server = spawn('php', ['-d', 'session.save_path="./_sess"', '-S', home, '-t', webroot || '.', path.join(webroot, 'index.php')], { stdio: ['ignore', 'ignore', 'ignore'] });
+        var server = spawn('php', ['-d', 'session.save_path="./_sess"', '-S', home, '-t', webroot || '.', path.join(webroot, 'index.php')], { stdio: ['inherit'] });
 
         var browser = new Browser();
         browser.site = home;
