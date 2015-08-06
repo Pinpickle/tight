@@ -138,7 +138,15 @@ exports.generateTheme = function generateTheme(opts) {
   }, opts);
 
   // Clean up theme folder
-  del.sync(['./theme/**/*', '!./theme/node_modules', '!./theme/node_modules/**/*', path.join(opts.webroot, 'theme-assets', '**/*')])
+  // Leave libraries alone for speed's sake
+  del.sync([
+    './theme/**/*',
+    '!./theme/node_modules',
+    '!./theme/node_modules/**/*',
+    '!./theme/bower_components',
+    '!./theme/bower_components/**/*',
+    path.join(opts.webroot, 'theme-assets', '**/*')
+  ]);
 
   gen.withOptions(opts.generatorOpts)
     .withPrompts(opts.generatorPrompts);
@@ -148,6 +156,9 @@ exports.generateTheme = function generateTheme(opts) {
   return new Promise(function(resolve, reject) {
     gen.on('end', function () {
       execSync('npm install', { stdio: 'inherit', cwd: 'theme' });
+      if (fs.existsSync('theme/bower.json')) {
+        execSync('bower install', { stdio: 'inherit', cwd: 'theme' });
+      }
       execSync('gulp build', { stdio: 'inherit' });
       resolve();
     });

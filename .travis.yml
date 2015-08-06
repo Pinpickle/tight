@@ -1,7 +1,7 @@
 sudo: true
 language: node_js
 before_install:
-  - npm install gulp -g
+  - npm install gulp bower -g
   - sudo apt-add-repository ppa:ondrej/php5-5.6 -y
   - sudo apt-get update -y
   - sudo apt-get install php5 php5-sqlite php5-gd php5-curl -y

@@ -149,16 +149,17 @@ describe.only('tight:theme', function () {
     package: ['npm', 'bower', 'both']
   }
 
-  permutations.js.forEach(function (jsName) {
-    permutations.css.forEach(function (cssName) {
-      permutations.package.forEach(function (packageName) {
-        var describeName = 'js:' + jsName + ' css:' + cssName + ' pacakge:' + packageName;
-        describeTheme(describeName, {
-          js: jsName,
-          css: cssName,
-          package: packageName
-        })
-      })
-    })
-  })
+  permutations.package.forEach(function (packageName) {
+    _.times(Math.max(permutations.css.length, permutations.js.length), function (n) {
+      var cssName = permutations.css[n % permutations.css.length];
+      var jsName = permutations.js[n % permutations.js.length];
+
+      var describeName = 'js:' + jsName + ' css:' + cssName + ' pacakge:' + packageName;
+      describeTheme(describeName, {
+        js: jsName,
+        css: cssName,
+        package: packageName
+      });
+    });
+  });
 });
