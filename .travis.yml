@@ -1,8 +1,14 @@
-sudo: true
+sudo: false
 language: node_js
+addons:
+    apt:
+        packages:
+            - php5-common
+            - php5-cli
+            - php5-sqlite
+            - php5-gd
+            - php5-curl
 before_install:
   - npm install gulp -g
-  - curl -sS https://getcomposer.org/installer | php
-  - sudo mv composer.phar /usr/local/bin/composer
 node_js:
   - 'iojs-v1'
