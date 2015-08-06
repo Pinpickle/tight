@@ -85,7 +85,7 @@ module.exports = lib.TightGenerator.extend({
         this.fastTemplate('js/main.js');
       }
 
-      if (this.props.bower) {
+      if (this.props.theme.bower) {
         this.fastTemplate('bower.json');
       }
     }
