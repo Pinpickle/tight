@@ -112,7 +112,6 @@ gulp.task('bundle:update', function () {
   exec(cmdString, { cwd: './dist', stdio: 'inherit' });
   exec('composer bolt-update', { cwd: './dist', stdio: 'inherit' });
   exec(cmdString, { cwd: './dist/extensions', stdio: 'inherit' });
-  cb();
 });
 
 gulp.task('bundle:cleanup', function(cb) {

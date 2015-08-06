@@ -4,6 +4,7 @@ var path = require('path');
 var assert = require('yeoman-generator').assert;
 var helpers = require('yeoman-generator').test;
 var spawn = require('child_process').spawn;
+var exec = require('child_process').exec;
 var fs = require('fs');
 var os = require('os');
 var crypto = require('crypto');
@@ -83,5 +84,23 @@ describe('tight:app', function () {
 
   describeApp('webroot as root', './', function (cb) {
     del(['./public'], cb);
+  });
+
+  describe('deploy script', function () {
+    it('can bundle app', function (done) {
+      this.timeout(0);
+      spawn('gulp', ['bundle'], { stdio: 'inherit' }).on('exit', function () {
+        done();
+      });
+    });
+
+    // TODO: Add deploy parts, maybe with a mock FTP server?
+    /*it('can deploy app', function () {
+
+    });
+
+    it('can deploy theme', function () {
+
+    });*/
   });
 });
