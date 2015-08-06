@@ -11,7 +11,8 @@
     "url": "https://github.com/Pinpickle"
   },
   "scripts": {
-    "test": "mocha -R spec"
+    "test": "mocha",
+    "test-server": "node ./test/utils --create-server"
   },
   "files": [
     "app"
@@ -30,8 +31,11 @@
     "yosay": "^1.0.2"
   },
   "devDependencies": {
+    "del": "^1.2.0",
+    "mkdirp": "^0.5.1",
     "mocha": "*",
     "phantom": "^0.7.2",
+    "yargs": "^3.17.1",
     "zombie": "^4.0.13"
   }
 }

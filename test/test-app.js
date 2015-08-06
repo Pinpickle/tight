@@ -4,86 +4,84 @@ var path = require('path');
 var assert = require('yeoman-generator').assert;
 var helpers = require('yeoman-generator').test;
 var spawn = require('child_process').spawn;
+var fs = require('fs');
 var os = require('os');
+var crypto = require('crypto');
 var Browser = require('zombie');
-var home = 'http://localhost:8123';
 var portfinder = require('portfinder');
-var browser = new Browser();
-browser.site = home;
-
-// Make sure we kill child processes when we exit
-//
-var cleanExit = function() { process.exit() };
-process.on('SIGINT', cleanExit); // catch ctrl-c
-process.on('SIGTERM', cleanExit); // catch kill
-
-/**
- * Starts the server on a free port
- *
- * @returns Promise - Resolves with the Browser object with an extra property,
- * `phpServer` that is the process of the PHP server being run
- */
-function startServer() {
-  return new Promise(function(resolve, reject) {
-      portfinder.getPort({ host: 'localhost' }, function (err, port) {
-        var home = '0.0.0.0:' + port;
-
-        var server = spawn('php', ['-S', home, '-t', '.', 'index.php'], { stdio: 'ignore' });
-
-        var browser = new Browser();
-        browser.site = 'localhost:' + port;
-        browser.phpServer = server;
-
-        // No matter what is tried, the stdout of PHP out will just not end up
-        // in the server.stdout stream. Using { stdio: 'inherit' } displays the
-        // output which is extra bizzare. Because of this, reliably detecting
-        // when the server starts is impossible. This is why the following is
-        // necessary.
-        // Might be a node issue or a  PHP issue
-
-        // HACK: Wait for PHP server to start
-        setTimeout(function () {
-          resolve(browser);
-        }, 1000);
-      });
-  });
-}
-
-/**
- * Stops the server
- *
- * @param object browser - the Browser object returned from stopServer
- */
-function stopServer(browser) {
-  browser.phpServer.kill('SIGINT');
-}
+var mkdirp = require('mkdirp');
+var del = require('del');
+var utils = require('./utils');
 
 describe('tight:app', function () {
-  var browser;
+  /**
+   * Dynamically generate a test for different app circumstances
+   */
+  var describeApp = function(name, webroot, beforeCall) {
+    describe(name, function () {
+      var browser;
 
-  before(function (done) {
-    this.timeout(0);
-    console.log('q');
+      before(function () {
+        this.timeout(0);
 
-    helpers.run(path.join(__dirname, '../generators/app'))
-      .withOptions({ skipInstall: true })
-      .withPrompts({ })
-      .withGenerators([ path.join(__dirname,'../generators/theme') ])
-      .on('end', function() {
-        startServer().then(function (b) {
-          console.log('d')
-          browser = b;
-          browser.visit('/');
-        });
+        return utils.generateApp({ webroot: webroot }).then(function (b) {
+            browser = b;
+
+            return new Promise(function(resolve, reject) {
+              beforeCall(resolve);
+            });
+          });
       });
-  });
 
-  it('can be visited', function () {
-    browser.assert.success();
-  });
+      it('creates an index at webroot', function () {
+        assert.file(path.join(webroot, 'index.php'));
+      });
 
-  after(function (done) {
-    stopServer(browser);
-    done();
+      it('can be visited', function () {
+        browser.assert.success();
+      });
+
+      it('goes to the first user page', function () {
+        browser.assert.text('title', 'Create the first user – Bolt');
+      });
+
+      it('can create first user', function () {
+        this.timeout(10000);
+        return browser
+          .fill('#form_username', 'admin')
+          .fill('#form_password', 'password')
+          .fill('#form_password_confirmation', 'password')
+          .fill('#form_email', 'test@tight.io')
+          .fill('#form_displayname', 'Tight User')
+          .pressButton('input[type=submit]')
+          .then(function () {
+            browser.assert.success();
+          });
+      });
+
+      it('can log the user in', function () {
+        this.timeout(10000);
+        return browser
+          .fill('#username', 'admin')
+          .fill('#password', 'password')
+          .pressButton('button[type=submit]')
+          .then(function () {
+            browser.assert.text('title', 'Dashboard – Bolt');
+          });
+      });
+
+      after(function (done) {
+        utils.stopServer(browser);
+        done();
+      });
+    });
+  };
+
+  describeApp('webroot in subdirectory', 'public', function (cb) {
+    cb();
+  })
+
+  describeApp('webroot as root', './', function (cb) {
+    del(['./public'], cb);
   });
 });
