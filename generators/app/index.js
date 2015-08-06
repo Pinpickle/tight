@@ -156,7 +156,7 @@ module.exports = lib.TightGenerator.extend({
       this.config.set(this.props);
       this.config.save();
 
-      this.composeWith('tight:theme', {
+      this.composeWith('tight:theme', { }, {
         local: require.resolve('../theme')
       });
     }
