@@ -13,6 +13,9 @@ var portfinder = require('portfinder');
 var mkdirp = require('mkdirp');
 var del = require('del');
 var utils = require('./utils');
+var _ = require('lodash');
+
+utils.setupDirectory();
 
 describe('tight:app', function () {
   /**
@@ -103,4 +106,59 @@ describe('tight:app', function () {
 
     });*/
   });
+});
+
+describe.only('tight:theme', function () {
+  /**
+   * Dynamically generate tests for the theme
+   */
+  var describeTheme = function (name, prompts) {
+    var browser;
+
+    describe(name, function () {
+      this.timeout(0);
+
+      before(function () {
+        return utils.generateTheme({ generatorPrompts: prompts })
+          .then(function (b) {
+            browser = b;
+          });
+      });
+
+      it('creates a theme gulpfile', function () {
+        assert.file('theme/gulp.js');
+      });
+
+      it('can be visited', function () {
+        browser.assert.success();
+      });
+
+      it('creates a working template', function () {
+        browser.assert.text('h1', 'Tight!');
+      });
+
+      after(function () {
+        utils.stopServer(browser);
+      })
+    });
+  };
+
+  var permutations = {
+    js: ['js', 'browserify'],
+    css: ['css', 'less'],
+    package: ['npm', 'bower', 'both']
+  }
+
+  permutations.js.forEach(function (jsName) {
+    permutations.css.forEach(function (cssName) {
+      permutations.package.forEach(function (packageName) {
+        var describeName = 'js:' + jsName + ' css:' + cssName + ' pacakge:' + packageName;
+        describeTheme(describeName, {
+          js: jsName,
+          css: cssName,
+          package: packageName
+        })
+      })
+    })
+  })
 });

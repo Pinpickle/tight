@@ -4,6 +4,7 @@ var path = require('path');
 var assert = require('yeoman-generator').assert;
 var helpers = require('yeoman-generator').test;
 var spawn = require('child_process').spawn;
+var execSync = require('child_process').execSync;
 var fs = require('fs');
 var os = require('os');
 var crypto = require('crypto');
@@ -61,21 +62,9 @@ exports.stopServer = function stopServer(browser) {
 };
 
 /**
- * Generates a new app in a random location
- *
- * @returns Promise - Same as startServer
+ * Go to a random temp dir
  */
-exports.generateApp = function generateApp(opts) {
-  var gen = helpers.run(path.join(__dirname, '../generators/app'), { tmpdir: false });
-  var ready = gen.async();
-  opts = _.merge({ }, {
-    generatorOpts: { skipInstall: false, force: true },
-    generatorPrompts: { },
-    webroot: ''
-  }, opts);
-
-  opts.generatorPrompts.webroot = opts.webroot;
-
+exports.setupDirectory = function setupDirectory() {
   // We want a tmp dir to work in to create an environment separate from
   // the development one. However, we want to be able to re-use that directory
   // as well. So the default Yeoman tmpdir is not satisfactory
@@ -91,6 +80,23 @@ exports.generateApp = function generateApp(opts) {
   var testDir = path.join(os.tmpdir(), tmp);
   mkdirp.sync(testDir);
   process.chdir(testDir);
+};
+
+/**
+ * Generates a new app in a random location
+ *
+ * @returns Promise - Same as startServer
+ */
+exports.generateApp = function generateApp(opts) {
+  var gen = helpers.run(path.join(__dirname, '../generators/app'), { tmpdir: false });
+  var ready = gen.async();
+  opts = _.merge({ }, {
+    generatorOpts: { skipInstall: false, force: true },
+    generatorPrompts: { },
+    webroot: ''
+  }, opts);
+
+  opts.generatorPrompts.webroot = opts.webroot;
 
   // Remvoe the database to check user creation
   // Remove index.php to avoid some false positives
@@ -117,6 +123,48 @@ exports.generateApp = function generateApp(opts) {
   });
 };
 
+/**
+ * Generates a new theme in cwd
+ *
+ * @returns Promise - same as startServer
+ */
+exports.generateTheme = function generateTheme(opts) {
+  var gen = helpers.run(path.join(__dirname, '../generators/theme'), { tmpdir: false });
+  var ready = gen.async();
+  opts = _.merge({ }, {
+    generatorOpts: { skipInstall: false, force: true },
+    generatorPrompts: { },
+    webroot: ''
+  }, opts);
+
+  // Clean up theme folder
+  del.sync(['./theme/**/*', '!./theme/node_modules', '!./theme/node_modules/**/*', path.join(opts.webroot, 'theme-assets', '**/*')])
+
+  gen.withOptions(opts.generatorOpts)
+    .withPrompts(opts.generatorPrompts);
+
+  var browser;
+
+  return new Promise(function(resolve, reject) {
+    gen.on('end', function () {
+      execSync('npm install', { stdio: 'inherit', cwd: 'theme' });
+      execSync('gulp build', { stdio: 'inherit' });
+      resolve();
+    });
+    ready();
+  }).then(function () {
+    return exports.startServer(path.join(process.cwd(), opts.webroot));
+  }).then(function (b) {
+    browser = b;
+    return browser.visit('/');
+  }).then(function () {
+    return browser;
+  }).catch(function (e) {
+    throw e;
+  });
+};
+
 if (argv.createServer) {
+  exports.setupDirectory();
   exports.generateApp({ webroot: argv.webroot });
 }
