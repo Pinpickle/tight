@@ -108,7 +108,7 @@ describe('tight:app', function () {
   });
 });
 
-describe.only('tight:theme', function () {
+describe('tight:theme', function () {
   /**
    * Dynamically generate tests for the theme
    */
