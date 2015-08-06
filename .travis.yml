@@ -2,6 +2,7 @@ sudo: true
 language: node_js
 before_install:
   - npm install gulp -g
-  - sudo apt-get install php composer
+  - curl -sS https://getcomposer.org/installer | php
+  - sudo mv composer.phar /usr/local/bin/composer
 node_js:
   - 'iojs-v1'
