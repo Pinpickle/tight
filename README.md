@@ -1,6 +1,6 @@
 # Tight
 
-![Build Status](https://api.travis-ci.org/Pinpickle/tight.svg)
+[![Build Status](https://api.travis-ci.org/Pinpickle/tight.svg)](https://travis-ci.org/Pinpickle/tight)
 
 Tighten that Bolt! This generator will set up [Bolt](http://bolt.cm) for you with a local extension and a feature-packed theme ready for you to make the best website the world has yet seen.
 
