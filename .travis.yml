@@ -1,4 +1,7 @@
-sudo: false
+sudo: true
 language: node_js
+before_install:
+  - npm install gulp -g
+  - sudo apt-get install php composer
 node_js:
   - 'iojs-v1'
