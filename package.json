@@ -35,6 +35,7 @@
     "mkdirp": "^0.5.1",
     "mocha": "*",
     "phantom": "^0.7.2",
+    "portfinder": "^0.4.0",
     "yargs": "^3.17.1",
     "zombie": "^4.0.13"
   }
