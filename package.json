@@ -3,7 +3,7 @@
   "version": "0.0.4",
   "description": "Bolt boilerplate generator",
   "license": "MIT",
-  "main": "app/index.js",
+  "main": "generators/app/index.js",
   "repository": "pinpickle/tight",
   "author": {
     "name": "Christian Silver",
@@ -15,7 +15,9 @@
     "test-server": "node ./test/utils --create-server"
   },
   "files": [
-    "app"
+    "generators",
+    "lib",
+    "README.md"
   ],
   "keywords": [
     "yeoman-generator"
