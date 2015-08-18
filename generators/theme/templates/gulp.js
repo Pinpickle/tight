@@ -188,7 +188,7 @@ gulp.task('watch', ['build'], function() {
   gulp.watch('theme/images/**/*', function() {
     sequence('img', 'rev');
   });
-  gulp.watch('templates/**/*', function() {
+  gulp.watch('theme/templates/**/*', function() {
     sequence('rev', reload);
   });
 
