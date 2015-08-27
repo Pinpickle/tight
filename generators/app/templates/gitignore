@@ -156,5 +156,5 @@ app/config/*_local.yml
 ### {{ name }} ###
 .env
 dist/
-theme-deployed/
+_theme-deployed/
 theme-assets/

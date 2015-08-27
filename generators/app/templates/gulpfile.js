@@ -146,9 +146,9 @@ gulp.task('deploy:app', function() {
 gulp.task('deploy:themedeploy', function() {
   var conn = createConnection();
 
-  return gulp.src(themeDeploy, {base: themeBase})
+  return gulp.src(themeDeploy, {base: '.'})
     .pipe(changed('./_theme-deployed', {hasChanged: changed.compareSha1Digest}))
-    .pipe(conn.dest(process.env.FTPDIR + '/' + themeBase))
+    .pipe(conn.dest(process.env.FTPDIR))
     .on('finish', function() {
       notifier.notify({title: '{{ name }} Theme Deploy Complete'});
     });
@@ -159,6 +159,6 @@ gulp.task('deploy:themeclean', ['deploy:themedeploy'], function(cb) {
 });
 
 gulp.task('deploy:theme', ['deploy:themeclean'], function() {
-  return gulp.src(themeDeploy, {base: themeBase})
+  return gulp.src(themeDeploy, {base: '.'})
     .pipe(gulp.dest('./_theme-deployed'));
 });
