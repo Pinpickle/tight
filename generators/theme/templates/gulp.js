@@ -17,9 +17,9 @@ var sequence = require('run-sequence');
 var path = require('path');
 var del = require('del');
 var env = require('node-env-file');
-var browserify = require('browserify');
 var reload = browserSync.reload;
 {% if theme.js == 'browserify' -%}
+var browserify = require('browserify');
 var bulkify = require('bulkify');
 var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
