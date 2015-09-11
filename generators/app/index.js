@@ -21,6 +21,30 @@ module.exports = lib.TightGenerator.extend({
   },
 
   prompting: {
+    /**
+     * Check if required global dependencies are installed and working
+     */
+    check: function () {
+      var done = this.async();
+
+      lib.commandExists('gulp')
+        .then(function (exists) {
+          if (!exists) {
+            this.log(chalk.bold.red('Gulp is not installed. Run `npm install -g` to install.'));
+            process.exit(1);
+          }
+          return lib.commandExists('composer -V');
+        }.bind(this))
+        .then(function (exists) {
+          if (!exists) {
+            this.log(chalk.bold.red('Composer is not installed globally. Visit https://getcomposer.org/doc/00-intro.md#globally for instructions to install.'));
+            process.exit(1);
+          }
+        }.bind(this)).done(function () {
+          done();
+        });
+    },
+    
     init: function () {
       var done = this.async();
 
