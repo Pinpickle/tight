@@ -8,7 +8,7 @@ Tighten that Bolt! This generator will set up [Bolt](http://bolt.cm) for you wit
 
 ## Installing and Running
 
-You're going to need to have the command line version of [Composer](http://getcomposer.org) installed (so no `php composer.phar` business), and [Node.js/npm](http://nodejs.org). This uses [Yeoman](http://yeoman.io/) and [Gulp](http://gulpjs.com) (and potentially [Bower](http://bower.io)), so you're going to want to have those installed.
+You're going to need to have the command line version of [Composer](http://getcomposer.org) installed (so no `php composer.phar` business), and [Node.js/npm at least v0.12](http://nodejs.org). This uses [Yeoman](http://yeoman.io/) and [Gulp](http://gulpjs.com) (and potentially [Bower](http://bower.io)), so you're going to want to have those installed.
 
     npm -g install yo gulp bower
 
@@ -54,8 +54,7 @@ This comes with a really simple local extension so you can author any custom PHP
 
 ## Contributing/Tests
 
-Tests are done using [Zombie.js](http://zombie.js.org/) and, as such, require [io.js](https://iojs.org/) as opposed to Node.
-So you'll have to have that installed if you want to run the tests.
+Tests are done using [Zombie.js](http://zombie.js.org/) and, as such, require Node/io.js at least version **1.0**.
 
     npm test
 
