@@ -34,6 +34,7 @@
   },
   "devDependencies": {
     "del": "^1.2.0",
+    "eslint": "^1.4.1",
     "mkdirp": "^0.5.1",
     "mocha": "*",
     "phantom": "^0.7.2",

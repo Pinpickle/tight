@@ -1,4 +1,3 @@
-'use strict';
 var chalk = require('chalk');
 var yosay = require('yosay');
 var slug = require('slug');
@@ -44,7 +43,7 @@ module.exports = lib.TightGenerator.extend({
           done();
         });
     },
-    
+
     init: function () {
       var done = this.async();
 
