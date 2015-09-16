@@ -29,7 +29,7 @@ module.exports = lib.TightGenerator.extend({
       lib.commandExists('gulp')
         .then(function (exists) {
           if (!exists) {
-            this.log(chalk.bold.red('Gulp is not installed. Run `npm install -g` to install.'));
+            this.log(chalk.bold.red('Gulp is not installed. Run `npm install gulp -g` to install.'));
             process.exit(1);
           }
           return lib.commandExists('composer -V');
