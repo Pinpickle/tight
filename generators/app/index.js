@@ -39,14 +39,6 @@ module.exports = lib.TightGenerator.extend({
             this.log(chalk.bold.red('Composer is not installed globally. Visit https://getcomposer.org/doc/00-intro.md#globally for instructions to install.'));
             process.exit(1);
           }
-          // TODO: Run check dependent on theme options
-          return lib.commandExists('bower -v');
-        }.bind(this))
-        .then(function (exists) {
-          if (!exists) {
-            this.log(chalk.bold.red('Bower is not installed. Run `npm install bower -g` to install.'));
-            process.exit(1);
-          }
         }.bind(this))
         .done(function () {
           done();

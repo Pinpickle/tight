@@ -63,7 +63,21 @@ module.exports = lib.TightGenerator.extend({
 
       this.props.theme = props;
 
-      done();
+      if (props.bower) {
+        lib.commandExists('bower -v')
+          .then(function (exists) {
+            if (!exists) {
+              this.log(chalk.bold.red('Bower is not installed. Run `npm install bower -g` to install.'));
+              process.exit(1);
+            }
+          }.bind(this))
+          .done(function () {
+            done();
+          });
+      } else {
+        done();
+      }
+
     }.bind(this));
   },
 
