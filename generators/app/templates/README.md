@@ -41,6 +41,16 @@ There are two methods of deployment, deploying just the theme (because you'll pr
 
 There is a `.env` file here that you will need to edit to configure the credentials for FTP. It's not commited to Git, so it won't end up online or anything (which is good).
 
+### File Deployment
+
+To deploy individual files, just use the `:file` subtask on the deploy task:
+
+```
+gulp deploy:file --file=app/config/config.yml # --file argument is mandatory
+gulp deploy:file --file=src/*.php # Use file globbing
+gulp deploy:file --file=theme/less/settings.less,theme/js/main.js # Use commas to separate files
+```
+
 ### Theme Deployment
 
 Make sure the theme has been built with the `--dist` flag (see the theme readme), and then just run the following command in this folder.

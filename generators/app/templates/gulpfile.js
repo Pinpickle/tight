@@ -13,6 +13,7 @@ var notifier = require('node-notifier');
 var gulpSrc = require('gulp-src-ordered-globs');
 var gutil = require('gulp-util');
 var path = require('path');
+var argv = require('yargs').argv;
 var exec = require('child_process').execSync;
 
 var composer = require('./composer.json');
@@ -141,7 +142,17 @@ gulp.task('deploy:app', function() {
     });
 });
 
+gulp.task('deploy:file', function () {
+  var conn = createConnection();
+  var file = argv.file;
 
+  if (file == null) {
+    throw new Error('Must supply --file argument');
+  }
+
+  return gulp.src(file.split(','), { base: '.' })
+    .pipe(conn.dest(process.env.FTPDIR));
+});
 
 gulp.task('deploy:themedeploy', function() {
   var conn = createConnection();
