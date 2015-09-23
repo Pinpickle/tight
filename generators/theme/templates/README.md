@@ -51,4 +51,4 @@ If you need to add more kinds of assets to parse, just write them into the gulpf
 
 ## Building for production
 
-When in development, Gulp will skip over some tasks that aren't necessary, but those shouldn't be skipped in production. Add the `--dist` flag in any task to implement optimisations such as CSS & JS minification, file reving and long-life browser caches. *Do this whenever you deploy*.
+When in development, Gulp will skip over some tasks that aren't necessary, but those shouldn't be skipped in production. Add the `--prod` flag in any task to implement optimisations such as CSS & JS minification, file reving and long-life browser caches. *Do this whenever you deploy*.

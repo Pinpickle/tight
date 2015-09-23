@@ -27,7 +27,7 @@ var buffer = require('vinyl-buffer');
 {% endif %}
 var keypress = require('keypress');
 
-var isDist = argv.dist;
+var isProd = argv.prod || argv.dist;
 var isServing = false;
 
 var composer = require('../composer.json');
@@ -65,7 +65,7 @@ gulp.task('css', ['clean:css'], function() {
     .pipe($.plumber({
       errorHandler: onError
     }))
-    .pipe($.if(!isDist, $.sourcemaps.init()))
+    .pipe($.if(!isProd, $.sourcemaps.init()))
   {%- if theme.css == 'less' %}
     .pipe($.less({
       paths: includes
@@ -78,7 +78,7 @@ gulp.task('css', ['clean:css'], function() {
     }))
   {%- endif %}
     .pipe($.autoprefixer({cascade: false}))
-    .pipe($.if(isDist, $.minifyCss()))
+    .pipe($.if(isProd, $.minifyCss()))
     .pipe(gulp.dest('theme/_tmp/styles'));
 });
 
@@ -103,7 +103,7 @@ var jsIncludes = [
 function gulpBrowserify(fileIn, fileOut) {
   return browserify({
       entries: fileIn,
-      debug: !isDist,
+      debug: !isProd,
       paths: [ path.dirname(fileIn) ]
     })
     .transform(bulkify)
@@ -120,14 +120,14 @@ function gulpBrowserify(fileIn, fileOut) {
 gulp.task('js', ['clean:js'], function() {
   {% if theme.js == 'js' -%}
   return gulp.src(jsIncludes)
-    .pipe($.if(!isDist, $.sourcemaps.init()))
+    .pipe($.if(!isProd, $.sourcemaps.init()))
     .pipe($.concat('main.js'))
   {%- elif theme.js == 'browserify' -%}
   return gulpBrowserify('./theme/js/main.js', 'main.js')
-    .pipe($.if(!isDist, $.sourcemaps.init({ loadMaps: true})))
+    .pipe($.if(!isProd, $.sourcemaps.init({ loadMaps: true})))
   {%- endif -%}
-    .pipe($.if(isDist, $.uglify()))
-    .pipe($.if(!isDist, $.sourcemaps.write()))
+    .pipe($.if(isProd, $.uglify()))
+    .pipe($.if(!isProd, $.sourcemaps.write()))
     .pipe(gulp.dest('theme/_tmp/scripts'));
 });
 
@@ -162,7 +162,7 @@ gulp.task('rev', ['clean:rev'], function() {
   var rev = new $.revAll();
   var src = gulp.src('theme/_tmp/**/*.*');
 
-  if (isDist) {
+  if (isProd) {
     src.pipe(rev.revision())
       .pipe(gulp.dest(assetsDir))
       .pipe(rev.manifestFile())
@@ -214,7 +214,7 @@ gulp.task('watch', ['build'], function() {
 gulp.task('htaccess', function() {
   gulp.src('theme/htaccess', { base: 'theme' })
     .pipe($.rename('.htaccess'))
-    .pipe($.if(isDist, gulp.dest(assetsDir)));
+    .pipe($.if(isProd, gulp.dest(assetsDir)));
 });
 
 // Just build the thing
