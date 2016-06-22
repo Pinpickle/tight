@@ -65,6 +65,7 @@ var appDeploy = [
   './extensions/composer.*',
   './extensions/ExtensionInstaller.php',
   './extensions/local/**/*',
+  './src/**/*.php',
 
   webPath('./index.php')
 ];
