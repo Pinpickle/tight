@@ -93,7 +93,7 @@ module.exports = lib.TightGenerator.extend({
       this.directory('images', 'images');
 
       this.fastTemplate(['config.yml', 'gulp.js', 'package.json', 'README.md', 'htaccess', 'js/main.js', 'js/lib/example-module.js', 'js/contexts/page-home.js',
-                         {gitignore: '.gitignore', env: '.env', jshintrc: '.jshintrc', 'js/app.js': path.join('js', this.props.shortName.toLowerCase() + '.js')}]);
+                         {gitignore: '.gitignore', env: '.env', eslintrc: '.eslintrc', 'js/app.js': path.join('js', this.props.shortName.toLowerCase() + '.js')}]);
 
       if (this.props.theme.js === 'browserify') {
         this.fastTemplate('js/main.js');
